@@ -17,4 +17,8 @@ useHead({
     { name: 'description', content: 'PikaSer - A Cosmos Validator' }
   ],
 })
+
+// Force dark mode
+const colorMode = useColorMode()
+colorMode.preference = "dark"
 </script>

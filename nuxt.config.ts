@@ -13,6 +13,11 @@ export default defineNuxtConfig({
     "github-markdown-css/github-markdown-dark.css",
   ],
 
+  colorMode: {
+    preference: "dark",
+    fallback:   "dark",
+  },
+
   content: {
     highlight: {
       theme: {

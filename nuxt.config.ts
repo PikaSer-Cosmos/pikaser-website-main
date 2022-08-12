@@ -71,4 +71,7 @@ export default defineNuxtConfig({
 
     langDir: "locales",
   },
+
+  // Enable Client-side only rendering
+  ssr: false,
 })

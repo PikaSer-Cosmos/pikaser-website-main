@@ -3,8 +3,6 @@
 </template>
 
 <script setup lang="ts">
-// import { reactive, computed } from 'vue'
-
 const props = defineProps({
   src: {
     type: String,

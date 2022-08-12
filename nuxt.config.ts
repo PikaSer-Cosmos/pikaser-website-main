@@ -73,7 +73,8 @@ export default defineNuxtConfig({
   },
 
   image: {
-    provider: "ipx",
+    // Use v2 folder for vercel
+    dir: "static"
   },
 
   // Enable Client-side only rendering

@@ -7,9 +7,9 @@
             :to="localePath('/')"
             class="logo-link"
           >
-            <img
+            <nuxt-img
               class="logo"
-              src="~/assets/logos/pikachu-sir-stripped.jpg"
+              src="/logos/pikachu-sir-stripped.jpg"
               alt="Logo"
               height="195"
               width="195"

@@ -9,7 +9,7 @@
           >
             <nuxt-img
               class="logo"
-              src="/logos/pikachu-sir-stripped.jpg"
+              :src="imgUrl"
               alt="Logo"
               height="195"
               width="195"
@@ -52,6 +52,8 @@
 import { useI18n } from "#i18n"
 
 const { t } = useI18n()
+
+const imgUrl = new URL("/assets/logos/pikachu-sir-stripped.jpg", import.meta.url).href
 </script>
 
 <style scoped lang="scss">

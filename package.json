@@ -7,8 +7,6 @@
     "preview": "nuxt preview"
   },
   "devDependencies": {
-    "@intlify/nuxt3": "^0.2.3",
-    "@intlify/vue-i18n-loader": "^4.2.0",
     "@nuxt/content": "npm:@nuxt/content-edge@latest",
     "@nuxt/image": "npm:@nuxt/image-edge@latest",
     "@nuxt/ui": "npm:@nuxt/ui-edge@latest",

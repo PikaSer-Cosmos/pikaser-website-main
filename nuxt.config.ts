@@ -74,8 +74,6 @@ export default defineNuxtConfig({
 
   image: {
     provider: "ipx",
-    // Generate images to `/_nuxt/image/file.png`
-    staticFilename: "[publicPath]/images/[name]-[hash][ext]",
   },
 
   // Enable Client-side only rendering

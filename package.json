@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --port 8000",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "devDependencies": {
+    "@intlify/nuxt3": "^0.2.3",
+    "@intlify/vue-i18n-loader": "^4.2.0",
+    "@nuxt/content": "npm:@nuxt/content-edge@latest",
+    "@nuxt/image": "npm:@nuxt/image-edge@latest",
+    "@nuxt/ui": "npm:@nuxt/ui-edge@latest",
+    "github-markdown-css": "^5.1.0",
+    "nuxt": "npm:nuxt3@latest",
+    "sass": "^1.54.0",
+    "vite": "^3.0.5",
+    "vue": "^3.2.37"
+  },
+  "dependencies": {
+    "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge"
+  }
+}

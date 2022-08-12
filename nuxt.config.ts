@@ -72,6 +72,10 @@ export default defineNuxtConfig({
     langDir: "locales",
   },
 
+  image: {
+    provider: "ipx",
+  },
+
   // Enable Client-side only rendering
   ssr: false,
 })

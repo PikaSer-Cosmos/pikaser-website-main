@@ -18,8 +18,5 @@
   },
   "dependencies": {
     "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge"
-  },
-  "engines": {
-    "node": "16.x"
   }
 }

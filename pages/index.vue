@@ -36,10 +36,9 @@
             </span>
           </div>
           <div class="page-entry-box__image">
-            <nuxt-img
+            <img
               :src="post.list_item_image_path"
               v-if="post.list_item_image_path"
-              placeholder
             />
           </div>
         </article>

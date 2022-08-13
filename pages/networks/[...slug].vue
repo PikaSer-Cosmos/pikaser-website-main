@@ -24,6 +24,12 @@ const route = useRoute()
 const { data } = await useAsyncData(() => queryContent(route.path).findOne())
 
 useContentHead(data)
+
+definePageMeta({
+  // For unknown reason if layout same as root page
+  // the content won't be displayed properly when root page is visited
+  layout: "custom",
+})
 </script>
 
 <style lang="scss">

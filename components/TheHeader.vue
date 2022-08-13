@@ -38,7 +38,7 @@
           :key="locale.code"
         >
           <nuxt-link
-            :to="switchLocalePath(locale.code)"
+            :to="localeLocation('/', locale.code)"
           >
             {{ locale.name }}
           </nuxt-link>

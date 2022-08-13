@@ -36,7 +36,7 @@ useContentHead(data)
     // This state uses darker color
     // The rule must be put on top
     &:visited {
-      color: darken(orange, 10%);
+      color: lighten(orange, 10%);
     }
     &:active ,
     &:hover {

@@ -21,4 +21,9 @@ useHead({
 // Force dark mode
 const colorMode = useColorMode()
 colorMode.preference = "dark"
+
+definePageMeta({
+  layout:         "default",
+  pageTransition: false,
+})
 </script>

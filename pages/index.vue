@@ -1,14 +1,16 @@
 <template>
   <div
-      class="max-w-3xl max-w-5xlmin-h-screen flex justify-center mx-auto my-12"
+    class="max-w-3xl max-w-5xlmin-h-screen flex justify-center mx-auto my-12"
   >
-    <main class="w-full">
-      <h1 class="text-4xl font-bold mb-6 text-center">
-        {{ t("PikaSer - Cosmos Blockchain Validator") }}
-      </h1>
-      <h2 class="text-1xl font-normal mb-6 text-center c-yellow-300">
-        {{ t("Operated by PikachuEXE") }}
-      </h2>
+    <div class="w-full">
+      <section>
+        <h1 class="text-4xl font-bold mb-6 text-center">
+          {{ t("PikaSer - Cosmos Blockchain Validator") }}
+        </h1>
+        <h2 class="text-1xl font-normal mb-6 text-center c-yellow-300">
+          {{ t("Operated by PikachuEXE") }}
+        </h2>
+      </section>
       <section>
         <form class="flex flex-col space-y-2 mb-4">
           <label for="search-supported-networks" class>
@@ -43,7 +45,7 @@
           </div>
         </article>
       </section>
-    </main>
+    </div>
   </div>
 </template>
 

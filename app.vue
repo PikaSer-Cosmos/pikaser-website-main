@@ -2,7 +2,11 @@
   <div>
     <NuxtLayout>
       <NuxtLoadingIndicator/>
-      <NuxtPage/>
+      <!--
+        `key` is required to workaround/fix an issue
+        https://github.com/nuxt/framework/issues/3141#issuecomment-1206647930
+      -->
+      <NuxtPage :key="$route.fullPath"/>
     </NuxtLayout>
   </div>
 </template>
@@ -22,9 +26,4 @@ useHead({
 // Force dark mode
 const colorMode = useColorMode()
 colorMode.preference = "dark"
-
-definePageMeta({
-  layout:         "default",
-  pageTransition: false,
-})
 </script>

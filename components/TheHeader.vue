@@ -24,6 +24,13 @@
             {{ t("Home") }}
           </nuxt-link>
         </li>
+        <li>
+          <nuxt-link
+            :to="localePath('/about')"
+          >
+            {{ t("About") }}
+          </nuxt-link>
+        </li>
         <li v-if="false">
           <nuxt-link
             :to="localePath('blog')"
@@ -134,10 +141,12 @@ ul {
 
 en:
   Home: Home
+  About: About
   Blog: Blog
 
 zh:
   Home: 首頁
+  About: 簡介
   Blog: 博客
 
 </i18n>

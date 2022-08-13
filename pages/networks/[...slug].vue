@@ -7,7 +7,6 @@
         <h1 class="text-2xl font-semibold mb-6">{{ data.title }}</h1>
         <section class="markdown-body">
           <ContentRenderer :value="data" />
-<!--          <ContentRendererMarkdown2 :value="data" />-->
         </section>
       </article>
     </div>
@@ -21,7 +20,7 @@
 <script setup>
 const route = useRoute()
 
-const { data } = await useAsyncData(() => queryContent(route.path).findOne())
+const { data } = await useAsyncData(route.path, () => queryContent(route.path).findOne())
 
 useContentHead(data)
 </script>

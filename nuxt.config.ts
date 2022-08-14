@@ -43,13 +43,13 @@ export default defineNuxtConfig({
     locales: [
       {
         code: "en",
-        iso:  "en-US",
+        iso:  "en",
         name: "English",
         file: "en.js",
       },
       {
         code: "zh",
-        iso:  "zh-TW",
+        iso:  "zh-Hant",
         name: "正體中文",
         file: "zh.js",
       },

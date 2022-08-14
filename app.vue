@@ -13,8 +13,15 @@
 
 <script setup>
 import { useI18n } from "#i18n"
+import { computed } from "vue"
 
+const I18n = useI18n()
+const I18nGlobal = useI18n({ useScope: 'global' })
+// Mainly for debugging
+const currentGlobalLocaleCode = I18nGlobal.locale
 const { t } = useI18n()
+const locales = I18nGlobal.locales.value
+const currentLocale = computed(() => locales.find((locale) => locale.code === currentGlobalLocaleCode.value))
 
 useHead({
   titleTemplate: (titleChunk) => {
@@ -25,7 +32,21 @@ useHead({
   meta: [
     { name: 'description', content: t("meta.description") }
   ],
+  htmlAttrs: {
+    lang: currentLocale.value.iso,
+  },
 })
+
+watch(
+  currentLocale,
+  () => {
+    useHead({
+      htmlAttrs: {
+        lang: currentLocale.value.iso,
+      },
+    })
+  },
+)
 
 // Force dark mode
 const colorMode = useColorMode()

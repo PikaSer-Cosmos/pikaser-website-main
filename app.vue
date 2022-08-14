@@ -14,7 +14,10 @@
 <script setup>
 import { useI18n } from "#i18n"
 
+const I18n = useI18n()
+const I18nGlobal = useI18n({ useScope: 'global' })
 const { t } = useI18n()
+const currentLocale = I18nGlobal.locales.value.find((locale) => locale.code === I18n.locale.value)
 
 useHead({
   titleTemplate: (titleChunk) => {
@@ -25,6 +28,9 @@ useHead({
   meta: [
     { name: 'description', content: t("meta.description") }
   ],
+  htmlAttrs: {
+    lang: currentLocale.iso,
+  },
 })
 
 // Force dark mode

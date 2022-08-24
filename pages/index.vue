@@ -53,30 +53,32 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useI18n } from '#i18n'
+import { useAsyncData, useHead } from "nuxt/app"
 
 const I18n = useI18n()
 const { t } = I18n
 
 const query_text = ref("")
 const { data: all_posts } = await useAsyncData(`all-posts-${I18n.locale.value}`, () => {
-  return queryNetworksContent().find()
+  return queryNetworkHomepagesContent().find()
 })
 const { data: posts } = await useAsyncData(`all-posts-${I18n.locale.value}`, () => {
-  return queryNetworksContent().find()
+  return queryNetworkHomepagesContent().find()
 })
 
 watch(query_text, async (newQuery) => {
   if (!newQuery) {
-    posts.value = await queryNetworksContent().find()
+    posts.value = await queryNetworkHomepagesContent().find()
     return
   }
-  posts.value = await queryNetworksContent().where({
+  posts.value = await queryNetworkHomepagesContent().where({
     "title": { $contains: newQuery },
   }).find()
 })
 
-function queryNetworksContent() {
+function queryNetworkHomepagesContent() {
   return queryContent(I18n.locale.value, "networks")
+  .where({ page_type: { $contains: "network_homepage" } })
 }
 
 

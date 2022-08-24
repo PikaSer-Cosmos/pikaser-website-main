@@ -2,6 +2,7 @@
 title: 'LikeCoin Network'
 description: Details of LikeCoin network including the validator PikaSer
 list_item_image_path: /likecoin/LikeCoin_PressKit_Logo_Fullcolor_Light.svg
+page_type: network_homepage
 ---
 
 <img src="/likecoin/1696.png" width=1500 height=500 placeholder="300,100"></img>

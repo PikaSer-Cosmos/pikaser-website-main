@@ -2,6 +2,7 @@
 title: 'LikeCoin 網絡'
 description: LikeCoin 網絡資訊，包括PikaSer驗證人資料
 list_item_image_path: /likecoin/LikeCoin_PressKit_Logo_Fullcolor_Light.svg
+page_type: network_homepage
 ---
 
 <img src="/likecoin/1696.png" width=1500 height=500 placeholder="300,100"></img>

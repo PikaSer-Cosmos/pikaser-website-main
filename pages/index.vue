@@ -25,8 +25,8 @@
           />
         </form>
       </section>
-      <section class="space-y-4 divide-y">
-        <article v-for="post of posts" :key="post.slug" class="mt-4 page-entry-box">
+      <section class="divide-y">
+        <article v-for="post of posts" :key="post.slug" class="pt-4 page-entry-box">
           <div class="page-entry-box__main-content">
             <h2 class="text-lg mb-2">
               <nuxt-link :to="post._path">

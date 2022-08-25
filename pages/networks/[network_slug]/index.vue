@@ -14,7 +14,7 @@
             {{ t("Past Proposal Decisions") }}
           </h2>
           <div class="divide-y">
-            <article v-for="post of all_proposal_posts" :key="post.slug" class="pt-4 page-entry-box">
+            <article v-for="post of all_proposal_posts" :key="post.slug" class="page-entry-box">
               <div class="page-entry-box__main-content">
                 <h3 class="text-lg mb-2">
                   <nuxt-link :to="post._path">
@@ -70,7 +70,9 @@ const { data: all_proposal_posts } = await useAsyncData(
     route.params.network_slug,
   ].join("/"),
   () => {
-    return queryNetworkProposalsContent().find()
+    return queryNetworkProposalsContent()
+    .sort({ title: -1 })
+    .find()
   }
 )
 
@@ -138,6 +140,29 @@ a {
   p:last-child {
     // Fix weird spacing
     margin-bottom: 0;
+  }
+}
+
+.page-entry-box {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  display: flex;
+  flex: 1;
+  justify-content: center;
+
+  &__main-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+  }
+  &__image {
+    margin-left: auto;
+
+    img {
+      height: 100px;
+    }
   }
 }
 

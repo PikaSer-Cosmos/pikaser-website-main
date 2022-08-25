@@ -1,0 +1,153 @@
+<template>
+  <template v-if="data">
+    <div
+      class="max-w-3xl max-w-5xlmin-h-screen flex justify-center mx-auto my-12"
+    >
+      <article class="w-full">
+        <h1 class="text-2xl font-semibold mb-6">{{ data.title }}</h1>
+        <section class="markdown-body">
+          <ContentRenderer :value="data" />
+        </section>
+        <hr class="my-8"/>
+        <section v-if="all_proposal_posts.length > 0">
+          <h2 class="text-2xl font-600 mb-2">
+            {{ t("Past Proposal Decisions") }}
+          </h2>
+          <div class="divide-y">
+            <article v-for="post of all_proposal_posts" :key="post.slug" class="pt-4 page-entry-box">
+              <div class="page-entry-box__main-content">
+                <h3 class="text-lg mb-2">
+                  <nuxt-link :to="post._path">
+                    {{ post.title }}
+                  </nuxt-link>
+                </h3>
+                <span>
+                {{ post.description }}
+              </span>
+              </div>
+            </article>
+          </div>
+        </section>
+      </article>
+    </div>
+  </template>
+
+  <template v-if="!data">
+    <h1>Document not found</h1>
+  </template>
+</template>
+
+<script setup>
+import { useI18n } from '#i18n'
+import { useAsyncData } from "nuxt/app"
+
+const I18n = useI18n()
+const { t } = useI18n()
+const route = useRoute()
+
+
+const { data } = await useAsyncData(
+  [
+    I18n.locale.value,
+    route.params.network_slug,
+  ].join("/"),
+  () => queryContent(
+    I18n.locale.value,
+    "networks",
+    route.params.network_slug,
+  )
+  .where({ page_type: { $contains: "network_homepage" } })
+  .findOne()
+)
+
+useContentHead(data)
+
+
+const { data: all_proposal_posts } = await useAsyncData(
+  [
+    "all_proposal_posts",
+    I18n.locale.value,
+    route.params.network_slug,
+  ].join("/"),
+  () => {
+    return queryNetworkProposalsContent().find()
+  }
+)
+
+function queryNetworkProposalsContent() {
+  return queryContent(
+    I18n.locale.value,
+    "networks",
+    route.params.network_slug,
+    "proposals",
+  )
+}
+</script>
+
+<style lang="scss">
+
+a {
+  color: yellow;
+
+  // This state uses darker color
+  // The rule must be put on top
+  &:visited {
+    color: lighten(orange, 10%);
+  }
+  &:active ,
+  &:hover {
+    color: orange;
+  }
+}
+
+.markdown-body {
+  background-color: transparent;
+
+  a {
+    // This is needed to override default style for `markdown-body`
+    @extend a;
+  }
+
+  h1, h2 {
+    border-bottom-color: rgba(110,118,129,0.4);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    a {
+      color: inherit;
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      // Reset color
+      &:visited {
+        color: inherit;
+      }
+      &:active ,
+      &:hover {
+        color: inherit;
+      }
+    }
+  }
+
+  ol, ul {
+    list-style: disc outside;
+  }
+
+  p:last-child {
+    // Fix weird spacing
+    margin-bottom: 0;
+  }
+}
+
+</style>
+
+
+<i18n lang="yaml">
+en:
+  Past Proposal Decisions: Past Proposal Decisions
+
+zh:
+  Past Proposal Decisions: 過去議案決定
+</i18n>

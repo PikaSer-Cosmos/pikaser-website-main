@@ -18,9 +18,25 @@
 </template>
 
 <script setup>
+import { useI18n } from '#i18n'
+const I18n = useI18n()
+
 const route = useRoute()
 
-const { data } = await useAsyncData(route.path, () => queryContent(route.path).findOne())
+const { data } = await useAsyncData(
+  [
+    I18n.locale.value,
+    route.params.network_slug,
+    route.params.proposal_id,
+  ].join("/"),
+  () => queryContent(
+    I18n.locale.value,
+    "networks",
+    route.params.network_slug,
+    "proposals",
+    route.params.proposal_id,
+  ).findOne()
+)
 
 useContentHead(data)
 </script>

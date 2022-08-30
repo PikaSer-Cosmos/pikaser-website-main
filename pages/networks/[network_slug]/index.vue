@@ -8,13 +8,35 @@
         <section class="markdown-body">
           <ContentRenderer :value="data" />
         </section>
-        <hr class="my-8"/>
-        <section v-if="all_proposal_posts.length > 0">
+
+        <hr class="my-8" v-if="!all_proposal_posts_loading && all_proposal_posts.length > 0" />
+        <section v-if="!all_proposal_posts_loading && all_proposal_posts.length > 0">
           <h2 class="text-2xl font-600 mb-2">
             {{ t("Past Proposal Decisions") }}
           </h2>
           <div class="divide-y">
             <article v-for="post of all_proposal_posts" :key="post.slug" class="page-entry-box">
+              <div class="page-entry-box__main-content">
+                <h3 class="text-lg mb-2">
+                  <nuxt-link :to="post._path">
+                    {{ post.title }}
+                  </nuxt-link>
+                </h3>
+                <span>
+                {{ post.description }}
+              </span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <hr class="my-8" v-if="!all_service_posts_loading && all_service_posts.length > 0" />
+        <section v-if="!all_service_posts_loading && all_service_posts.length > 0">
+          <h2 class="text-2xl font-600 mb-2">
+            {{ t("Community Tools & Services") }}
+          </h2>
+          <div class="divide-y">
+            <article v-for="post of all_service_posts" :key="post.slug" class="page-entry-box">
               <div class="page-entry-box__main-content">
                 <h3 class="text-lg mb-2">
                   <nuxt-link :to="post._path">
@@ -63,7 +85,10 @@ const { data } = await useAsyncData(
 useContentHead(data)
 
 
-const { data: all_proposal_posts } = await useAsyncData(
+const {
+  pending: all_proposal_posts_loading,
+  data: all_proposal_posts,
+} = useLazyAsyncData(
   [
     "all_proposal_posts",
     I18n.locale.value,
@@ -84,6 +109,31 @@ function queryNetworkProposalsContent() {
     "proposals",
   )
 }
+
+const {
+  pending: all_service_posts_loading,
+  data: all_service_posts,
+} = useLazyAsyncData(
+  [
+    "all_service_posts",
+    I18n.locale.value,
+    route.params.network_slug,
+  ].join("/"),
+  () => {
+    return queryNetworkServicesContent()
+    .find()
+  }
+)
+
+function queryNetworkServicesContent() {
+  return queryContent(
+    I18n.locale.value,
+    "networks",
+    route.params.network_slug,
+    "services",
+  )
+}
+
 </script>
 
 <style lang="scss">

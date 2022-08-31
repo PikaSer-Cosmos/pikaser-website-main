@@ -194,8 +194,10 @@ a {
 }
 
 .page-entry-box {
+  // Using padding on top to ensure spacing
   padding-top: 1rem;
-  padding-bottom: 1rem;
+  // Using margin bottom to avoid uneven spacing
+  margin-bottom: 1rem;
 
   display: flex;
   flex: 1;
@@ -222,7 +224,9 @@ a {
 <i18n lang="yaml">
 en:
   Past Proposal Decisions: Past Proposal Decisions
+  Community Tools & Services: Community Tools & Services
 
 zh:
   Past Proposal Decisions: 過去議案決定
+  Community Tools & Services: 各種工具和服務
 </i18n>

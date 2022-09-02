@@ -32,7 +32,7 @@
         <strong v-else>{{ class_purchase_data.metadata.soldCount }}</strong>
       </p>
       <p class="mt-4">
-        {{ t("Owner") }}
+        {{ t("ISCN Owner") }}
         <span> - </span>
         <span v-if="class_metadata_loading">...</span>
         <strong v-else-if="class_metadata_error != null">???</strong>
@@ -124,12 +124,12 @@ en:
   On-Chain Data: On-Chain Data
   Current Price: Current Price
   Sold: Sold
-  Owner: Owner
+  ISCN Owner: ISCN Owner
 
 zh:
   NFT Page on Liker Land: Liker Land上的NFT頁面
   On-Chain Data: LikeCoin鏈上資料
   Current Price: 現時價格
   Sold: 已賣出
-  Owner: 擁有者
+  ISCN Owner: ISCN 擁有者
 </i18n>

@@ -27,6 +27,20 @@
               </option>
             </select>
           </section>
+          <section>
+            <NTextInput
+              icon="carbon:person"
+              :placeholder='t("Creator")'
+              v-model="recent_writing_nfts_data_creator_address"
+            />
+          </section>
+          <section>
+            <NTextInput
+              icon="carbon:person-favorite"
+              :placeholder='t("Collector")'
+              v-model="recent_writing_nfts_data_collector_address"
+            />
+          </section>
         </section>
         <section class="pt-4 mt-4 border-t-1">
           <div v-if="recent_writing_nfts_data_loading">
@@ -44,6 +58,7 @@
 </template>
 
 <script setup>
+import { ref } from "vue"
 import { useI18n } from '#i18n'
 import { useAsyncData } from "nuxt/app"
 import dayjs from 'dayjs'
@@ -81,18 +96,15 @@ const recent_writing_nfts_data_time_limit_in_days_options = [
   28,
 ]
 
+const recent_writing_nfts_data_creator_address = ref('')
+const recent_writing_nfts_data_collector_address = ref('')
+
 const {
   pending: recent_writing_nfts_data_loading,
   data: recent_writing_nft_class_entries,
 } = useAsyncData(
   [
     "recent_writing_nfts_data",
-
-    "pagination_limit",
-    recent_writing_nfts_data_pagination_limit,
-
-    "time_limit_in_days",
-    recent_writing_nfts_data_time_limit_in_days,
   ].join("/"),
   (() => {
     const earliest_time_in_unix_time = dayjs().subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days').unix()
@@ -102,8 +114,10 @@ const {
       "https://mainnet-node.like.co/likechain/likenft/v1/ranking",
       {
         params: {
-          after: earliest_time_in_unix_time,
-          limit: recent_writing_nfts_data_pagination_limit.value,
+          after:      earliest_time_in_unix_time,
+          limit:      recent_writing_nfts_data_pagination_limit.value,
+          creator:    recent_writing_nfts_data_creator_address.value,
+          collector:  recent_writing_nfts_data_collector_address.value,
         },
       }
     )
@@ -112,6 +126,8 @@ const {
     watch: [
       recent_writing_nfts_data_pagination_limit,
       recent_writing_nfts_data_time_limit_in_days,
+      recent_writing_nfts_data_creator_address,
+      recent_writing_nfts_data_collector_address,
     ],
     default: () => {
       return []
@@ -180,6 +196,8 @@ en:
 
   Display at most: Display at most
   In last N days: In last N days
+  Creator: Creator
+  Collector: Collector
 
   Loading...: Loading...
 
@@ -192,6 +210,8 @@ zh:
 
   Display at most: 顯示最多
   In last N days: 限最近多少日
+  Creator: 創造者
+  Collector: 收藏者
 
   Loading...: 蕉蕉發電中…
 </i18n>

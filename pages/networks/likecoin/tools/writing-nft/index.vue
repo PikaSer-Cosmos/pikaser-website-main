@@ -132,7 +132,9 @@ const {
     default: () => {
       return []
     },
-    transform: ((data) => data.classes),
+    transform: ((data) => {
+      return data.classes.sort((a, b) => dayjs(b.created_at).unix() - dayjs(a.created_at).unix())
+    }),
   }
 )
 

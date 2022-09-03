@@ -9,47 +9,63 @@
           <ContentRenderer :value="data" />
         </section>
 
-        <hr class="my-8" v-if="!all_proposal_posts_loading && all_proposal_posts.length > 0" />
-        <section v-if="!all_proposal_posts_loading && all_proposal_posts.length > 0">
-          <h2 class="text-2xl font-600 mb-2">
-            {{ t("Past Proposal Decisions") }}
-          </h2>
-          <div class="divide-y">
-            <article v-for="post of all_proposal_posts" :key="post.slug" class="page-entry-box">
-              <div class="page-entry-box__main-content">
-                <h3 class="text-lg mb-2">
-                  <nuxt-link :to="post._path">
-                    {{ post.title }}
-                  </nuxt-link>
-                </h3>
-                <span>
+        <div v-if="!all_proposal_posts_loading && all_proposal_posts.length > 0">
+          <hr class="my-8" />
+          <section>
+            <h2 class="text-2xl font-600 mb-2">
+              {{ t("Past Proposal Decisions") }}
+            </h2>
+            <div class="divide-y">
+              <article v-for="post of all_proposal_posts" :key="post.slug" class="page-entry-box">
+                <div class="page-entry-box__main-content">
+                  <h3 class="text-lg mb-2">
+                    <nuxt-link :to="post._path">
+                      {{ post.title }}
+                    </nuxt-link>
+                  </h3>
+                  <span>
                 {{ post.description }}
               </span>
-              </div>
-            </article>
-          </div>
-        </section>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
 
-        <hr class="my-8" v-if="!all_service_posts_loading && all_service_posts.length > 0" />
-        <section v-if="!all_service_posts_loading && all_service_posts.length > 0">
-          <h2 class="text-2xl font-600 mb-2">
-            {{ t("Community Tools & Services") }}
-          </h2>
-          <div class="divide-y">
-            <article v-for="post of all_service_posts" :key="post.slug" class="page-entry-box">
-              <div class="page-entry-box__main-content">
-                <h3 class="text-lg mb-2">
-                  <nuxt-link :to="post._path">
-                    {{ post.title }}
-                  </nuxt-link>
-                </h3>
-                <span>
-                {{ post.description }}
-              </span>
-              </div>
-            </article>
-          </div>
-        </section>
+        <div v-if="all_service_n_tools_entries_loaded && (all_service_posts.length + all_tool_pages.length) > 0">
+          <hr class="my-8"/>
+          <section>
+            <h2 class="text-2xl font-600 mb-2">
+              {{ t("Community Tools & Services") }}
+            </h2>
+            <div class="divide-y">
+              <article v-for="post of all_service_posts" :key="post.slug" class="page-entry-box">
+                <div class="page-entry-box__main-content">
+                  <h3 class="text-lg mb-2">
+                    <nuxt-link :to="post._path">
+                      {{ post.title }}
+                    </nuxt-link>
+                  </h3>
+                  <span>
+                    {{ post.description }}
+                  </span>
+                </div>
+              </article>
+              <article v-for="post of all_tool_pages" :key="post.slug" class="page-entry-box">
+                <div class="page-entry-box__main-content">
+                  <h3 class="text-lg mb-2">
+                    <nuxt-link :to="post._path">
+                      {{ post.title }}
+                    </nuxt-link>
+                  </h3>
+                  <span>
+                    {{ post.description }}
+                  </span>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
       </article>
     </div>
   </template>
@@ -62,6 +78,7 @@
 <script setup>
 import { useI18n } from '#i18n'
 import { useAsyncData } from "nuxt/app"
+import { computed } from "vue"
 
 const I18n = useI18n()
 const { t } = useI18n()
@@ -133,6 +150,34 @@ function queryNetworkServicesContent() {
     "services",
   )
 }
+
+const {
+  pending: all_tool_pages_loading,
+  data: all_tool_pages,
+} = useLazyAsyncData(
+  [
+    "all_tool_pages",
+    I18n.locale.value,
+    route.params.network_slug,
+  ].join("/"),
+  () => {
+    return queryNetworkToolPagesContent()
+    .find()
+  }
+)
+
+function queryNetworkToolPagesContent() {
+  return queryContent(
+    I18n.locale.value,
+    "networks",
+    route.params.network_slug,
+    "tools",
+  )
+}
+
+const all_service_n_tools_entries_loaded = computed(() => {
+  return !all_service_posts_loading.value && !all_tool_pages_loading.value
+})
 
 </script>
 

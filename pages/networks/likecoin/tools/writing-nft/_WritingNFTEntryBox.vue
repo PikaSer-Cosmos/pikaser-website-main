@@ -43,7 +43,7 @@
       <p class="mt-4">
         {{ nft_class.description }}
       </p>
-      <p class="mt-4" v-if="!class_metadata_loading">
+      <p class="mt-4" v-if="!class_metadata_loading && class_metadata_error == null">
         <img :src="class_metadata.image" loading="lazy" />
       </p>
     </div>

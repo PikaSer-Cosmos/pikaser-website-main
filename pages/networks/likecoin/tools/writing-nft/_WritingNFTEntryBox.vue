@@ -2,7 +2,7 @@
   <article class="writing-nft-entry-box">
     <div class="writing-nft-entry-box__main-content">
       <h3 class="text-lg">
-        <a :href="nft_class.metadata.external_url" target="_blank" rel="noreferrer noopener">
+        <a :href="nft_class.metadata.external_url || `https://liker.land/nft/class/${nft_class.id}`" target="_blank" rel="noreferrer noopener">
           {{ nft_class.metadata.name || nft_class.name.replace("Writing NFT - ", "") }}
         </a>
       </h3>

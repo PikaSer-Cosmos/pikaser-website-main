@@ -38,6 +38,9 @@
         <strong v-else-if="class_metadata_error != null">???</strong>
         <a v-else :href="`https://liker.land/${class_metadata.iscn_owner}`" target="_blank" rel="noreferrer noopener">
           <strong>{{ class_metadata.iscn_owner }}</strong>
+          <span v-if="!iscn_owner_data_loading && iscn_owner_data != null">
+            ({{ iscn_owner_data.displayName }})
+          </span>
         </a>
       </p>
       <p class="mt-4">
@@ -93,25 +96,47 @@ const {
   })
 )
 
+const fetch_class_metadata_promise = $fetch(
+  "https://api.like.co/likernft/metadata",
+  {
+    params: {
+      iscn_id: nft_class.parent.iscn_id_prefix,
+    },
+  }
+)
+
 const {
-  pending: class_metadata_loading,
-  data: class_metadata,
-  error: class_metadata_error,
+  pending:  class_metadata_loading,
+  data:     class_metadata,
+  error:    class_metadata_error,
 } = useAsyncData(
   [
     "class_metadata",
-    nft_class.id,
+    nft_class.parent.iscn_id_prefix,
   ].join("/"),
   (() => {
     // https://docs.like.co/developer/likenft/api-reference
-    return $fetch(
-      "https://api.like.co/likernft/metadata",
-      {
-        params: {
-          iscn_id: nft_class.parent.iscn_id_prefix,
-        },
-      }
-    )
+    return fetch_class_metadata_promise
+  })
+)
+
+const {
+  pending:  iscn_owner_data_loading,
+  data:     iscn_owner_data,
+  error:    iscn_owner_data_error,
+} = useAsyncData(
+  [
+    "iscn_owner_data",
+    nft_class.parent.iscn_id_prefix,
+  ].join("/"),
+  (() => {
+    return fetch_class_metadata_promise
+    .then((class_metadata_2) => {
+      return $fetch(
+        `https://api.like.co/users/addr/${class_metadata_2.iscn_owner}/min`,
+      )
+    })
+
   })
 )
 

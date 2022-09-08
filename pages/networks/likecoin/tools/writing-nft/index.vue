@@ -48,8 +48,21 @@
               {{ t("Loading...") }}
             </p>
           </div>
-          <div v-else class="divide-y">
-            <WritingNFTEntryBox v-for="nft_class of recent_writing_nft_class_entries" :key="nft_class.id" :nft_class="nft_class" />
+          <div v-else>
+            <div class="divide-y">
+              <WritingNFTEntryBox v-for="nft_class of all_recent_writing_nft_class_entries" :key="nft_class.id" :nft_class="nft_class" />
+            </div>
+            <div>
+              <NButton
+                class="w-full text-center"
+                :disabled="!load_more_button_enabled"
+                :icon="more_nft_being_loaded ? 'carbon:time' : 'carbon:search-advanced'"
+                n="green solid"
+                @click="load_more_recent_writing_nft_class_entries()"
+              >
+                {{ load_more_button_text }}
+              </NButton>
+            </div>
           </div>
         </section>
       </section>
@@ -58,7 +71,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useI18n } from '#i18n'
 import { useAsyncData } from "nuxt/app"
 import dayjs from 'dayjs'
@@ -133,10 +146,82 @@ const {
       return []
     },
     transform: ((data) => {
-      return data.classes.sort((a, b) => dayjs(b.created_at).unix() - dayjs(a.created_at).unix())
+      return data.classes.map((nft_class) => {
+        nft_class.created_at_in_unix = dayjs(nft_class.created_at).unix()
+        return nft_class
+      })
+      .sort((a, b) => b.created_at_in_unix - a.created_at_in_unix)
     }),
   }
 )
+
+const all_recent_writing_nft_class_entries = ref(recent_writing_nft_class_entries)
+const earliest_writing_nft_created_at_in_unix = computed(() => {
+  return all_recent_writing_nft_class_entries.value.at(-1).created_at_in_unix
+})
+const more_nft_being_loaded = ref(false)
+const more_nft_can_be_loaded = ref(true)
+
+const load_more_button_enabled = ref(true)
+const load_more_button_text = computed(() => {
+  if (more_nft_being_loaded.value) {
+    return t("Loading More...")
+  }
+
+  if (load_more_button_enabled.value) {
+    return t("Is There More～")
+  }
+
+  // Probably nothing left
+  return t("Nothing left...")
+})
+
+function load_more_recent_writing_nft_class_entries() {
+  // Disable button, but not hide it
+  load_more_button_enabled.value = false
+  more_nft_being_loaded.value = true
+
+  const earliest_time_in_unix_time =
+    dayjs.unix(earliest_writing_nft_created_at_in_unix.value)
+    .subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days')
+    .unix()
+
+  $fetch(
+    "https://mainnet-node.like.co/likechain/likenft/v1/ranking",
+    {
+      params: {
+        before:     earliest_writing_nft_created_at_in_unix.value,
+        after:      earliest_time_in_unix_time,
+        limit:      recent_writing_nfts_data_pagination_limit.value,
+        creator:    recent_writing_nfts_data_creator_address.value,
+        collector:  recent_writing_nfts_data_collector_address.value,
+      },
+    }
+  )
+  .then((data) => {
+    // "Flatten" it to array
+    if (data.classes == null) { return [] }
+
+    return data.classes.map((nft_class) => {
+      nft_class.created_at_in_unix = dayjs(nft_class.created_at).unix()
+      return nft_class
+    })
+    .sort((a, b) => b.created_at_in_unix - a.created_at_in_unix)
+  })
+  .then((nft_classes) => {
+    all_recent_writing_nft_class_entries.value = all_recent_writing_nft_class_entries.value.concat(nft_classes)
+    // Disable button AND hide it if it seems to be end of all entries
+    load_more_button_enabled.value  = nft_classes.length !== 0
+    more_nft_can_be_loaded.value    = nft_classes.length !== 0
+  })
+  .catch(() => {
+    // For retry
+    load_more_button_enabled.value = true
+  })
+  .finally(() => {
+    more_nft_being_loaded.value = false
+  })
+}
 
 </script>
 
@@ -203,6 +288,10 @@ en:
 
   Loading...: Loading...
 
+  Is There More～: Is There More～
+  Loading More...: Loading More...
+  Nothing left...: Nothing left...
+
 zh:
   meta:
     title: "LikeCoin Writing NFT 工具"
@@ -216,4 +305,8 @@ zh:
   Collector: 收藏者
 
   Loading...: 蕉蕉發電中…
+
+  Is There More～: 還有更多嗎～
+  Loading More...: 正在尋找更多…
+  Nothing left...: 然後就沒有然後了…
 </i18n>

@@ -11,8 +11,14 @@
             <label for="recent_writing_nfts_data_pagination_limit_select">
               {{ t("Display at most") }}:
             </label>
-            <select v-model="recent_writing_nfts_data_pagination_limit" id="recent_writing_nfts_data_pagination_limit_select">
-              <option v-for="recent_writing_nfts_data_pagination_limit_option in recent_writing_nfts_data_pagination_limit_options" :value="recent_writing_nfts_data_pagination_limit_option">
+            <select
+              v-model="recent_writing_nfts_data_pagination_limit"
+              id="recent_writing_nfts_data_pagination_limit_select"
+            >
+              <option
+                v-for="recent_writing_nfts_data_pagination_limit_option in recent_writing_nfts_data_pagination_limit_options"
+                :value="recent_writing_nfts_data_pagination_limit_option"
+              >
                 {{ recent_writing_nfts_data_pagination_limit_option }}
               </option>
             </select>
@@ -21,8 +27,14 @@
             <label for="recent_writing_nfts_data_time_limit_in_days_select">
               {{ t("In last N days") }}:
             </label>
-            <select v-model="recent_writing_nfts_data_time_limit_in_days" id="recent_writing_nfts_data_time_limit_in_days_select">
-              <option v-for="recent_writing_nfts_data_time_limit_in_days_option in recent_writing_nfts_data_time_limit_in_days_options" :value="recent_writing_nfts_data_time_limit_in_days_option">
+            <select
+              v-model="recent_writing_nfts_data_time_limit_in_days"
+              id="recent_writing_nfts_data_time_limit_in_days_select"
+            >
+              <option
+                v-for="recent_writing_nfts_data_time_limit_in_days_option in recent_writing_nfts_data_time_limit_in_days_options"
+                :value="recent_writing_nfts_data_time_limit_in_days_option"
+              >
                 {{ recent_writing_nfts_data_time_limit_in_days_option }}
               </option>
             </select>

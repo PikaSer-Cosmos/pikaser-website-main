@@ -50,7 +50,12 @@
           </div>
           <div v-else>
             <div class="divide-y">
-              <WritingNFTEntryBox v-for="nft_class of all_recent_writing_nft_class_entries" :key="nft_class.id" :nft_class="nft_class" />
+              <WritingNFTEntryBox
+                v-for="nft_class of all_recent_writing_nft_class_entries"
+                :key="nft_class.id"
+                :nft_class="nft_class"
+                @filter_by_creator_address="(address) => recent_writing_nfts_data_creator_address = address"
+              />
             </div>
             <div>
               <NButton

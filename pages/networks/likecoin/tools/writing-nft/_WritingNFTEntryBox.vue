@@ -36,12 +36,22 @@
         <span> - </span>
         <span v-if="class_metadata_loading">...</span>
         <strong v-else-if="class_metadata_error != null">???</strong>
-        <a v-else :href="`https://liker.land/${class_metadata.iscn_owner}`" target="_blank" rel="noreferrer noopener">
-          <strong>{{ class_metadata.iscn_owner }}</strong>
-          <span v-if="!iscn_owner_data_loading && iscn_owner_data != null">
-            ({{ iscn_owner_data.displayName }})
-          </span>
-        </a>
+        <span v-else>
+          <a :href="`https://liker.land/${class_metadata.iscn_owner}`" target="_blank" rel="noreferrer noopener">
+            <strong>{{ class_metadata.iscn_owner }}</strong>
+            <span v-if="!iscn_owner_data_loading && iscn_owner_data != null">
+              ({{ iscn_owner_data.displayName }})
+            </span>
+          </a>
+          <NButton
+            class="ml-2"
+            icon="carbon:filter"
+            n="green xs"
+            @click="emit('filter_by_creator_address', class_metadata.iscn_owner)"
+          >
+            {{ t("View NFTs by This Creator") }}
+          </NButton>
+        </span>
       </p>
       <p class="mt-4">
         {{ nft_class.description }}
@@ -53,10 +63,18 @@
   </article>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useI18n } from '#i18n'
 import { useAsyncData } from "nuxt/app"
 import dayjs from 'dayjs'
+
+interface ClassMetadata {
+  iscn_owner: string
+}
+
+const emit = defineEmits<{
+  (e: 'filter_by_creator_address', address: string): void
+}>()
 
 const I18n = useI18n()
 const { t } = I18n
@@ -64,11 +82,11 @@ const { t } = I18n
 const { nft_class } = defineProps({
   nft_class: {
     type: Object,
-    validator(value) {
+    validator(value: {[key: string]: unknown}) {
       const val_obj_keys = Object.keys(value)
 
       return ["id", "metadata", "created_at"].every((expected_key) => {
-        return val_obj_keys.includes(expected_key)
+        return (val_obj_keys).includes(expected_key)
       })
     },
   },
@@ -96,7 +114,7 @@ const {
   })
 )
 
-const fetch_class_metadata_promise = $fetch(
+const fetch_class_metadata_promise = $fetch<ClassMetadata>(
   "https://api.like.co/likernft/metadata",
   {
     params: {
@@ -136,7 +154,6 @@ const {
         `https://api.like.co/users/addr/${class_metadata_2.iscn_owner}/min`,
       )
     })
-
   })
 )
 
@@ -150,6 +167,7 @@ en:
   Current Price: Current Price
   Sold: Sold
   ISCN Owner: ISCN Owner
+  View NFTs by This Creator: View NFTs by This Creator
 
 zh:
   NFT Page on Liker Land: Liker Land上的NFT頁面
@@ -157,4 +175,5 @@ zh:
   Current Price: 現時價格
   Sold: 已賣出
   ISCN Owner: ISCN 擁有者
+  View NFTs by This Creator: 查看此創造者的NFT
 </i18n>

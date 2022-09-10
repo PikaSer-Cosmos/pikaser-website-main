@@ -2,18 +2,18 @@
   <article class="writing-nft-entry-box">
     <div class="writing-nft-entry-box__main-content">
       <h3 class="text-lg">
-        <a :href="nft_class.metadata.external_url || `https://liker.land/nft/class/${nft_class.id}`" target="_blank" rel="noreferrer noopener">
-          {{ nft_class.metadata.name || nft_class.name.replace("Writing NFT - ", "") }}
+        <a :href="props.nft_class.metadata.external_url || `https://liker.land/nft/class/${props.nft_class.id}`" target="_blank" rel="noreferrer noopener">
+          {{ props.nft_class.metadata.name || props.nft_class.name.replace("Writing NFT - ", "") }}
         </a>
       </h3>
       <p class="mt-4">
-        <a :href="`https://liker.land/nft/class/${nft_class.id}`" target="_blank" rel="noreferrer noopener">
+        <a :href="`https://liker.land/nft/class/${props.nft_class.id}`" target="_blank" rel="noreferrer noopener">
           {{ t("NFT Page on Liker Land") }}
         </a>
         <span> - </span>
-        <span>{{ dayjs(nft_class.created_at).format("YYYY-MM-DD") }}</span>
+        <span>{{ dayjs(props.nft_class.created_at).format("YYYY-MM-DD") }}</span>
         <span> - </span>
-        <a :href="`https://app.like.co/view/${encodeURIComponent(nft_class.parent.iscn_id_prefix)}`" target="_blank" rel="noreferrer noopener">
+        <a :href="`https://app.like.co/view/${encodeURIComponent(props.nft_class.parent.iscn_id_prefix)}`" target="_blank" rel="noreferrer noopener">
           {{ t("On-Chain Data") }}
         </a>
       </p>
@@ -31,30 +31,52 @@
         <strong v-else-if="class_purchase_data_error != null">???</strong>
         <strong v-else>{{ class_purchase_data.metadata.soldCount }}</strong>
       </p>
-      <p class="mt-4">
-        {{ t("ISCN Owner") }}
-        <span> - </span>
-        <span v-if="class_metadata_loading">...</span>
-        <strong v-else-if="class_metadata_error != null">???</strong>
-        <span v-else>
-          <a :href="`https://liker.land/${class_metadata.iscn_owner}`" target="_blank" rel="noreferrer noopener">
-            <strong>{{ class_metadata.iscn_owner }}</strong>
-            <span v-if="!iscn_owner_data_loading && iscn_owner_data != null">
-              ({{ iscn_owner_data.displayName }})
-            </span>
-          </a>
+      <section class="mt-4">
+        <p>
+          {{ t("ISCN Owner") }}
+          <span> - </span>
+          <span v-if="class_metadata_loading">...</span>
+          <strong v-else-if="class_metadata_error != null">???</strong>
+          <span v-else>
+            <a :href="`https://liker.land/${class_metadata.iscn_owner}`" target="_blank" rel="noreferrer noopener">
+              <strong>{{ class_metadata.iscn_owner }}</strong>
+              <span v-if="!iscn_owner_data_loading && iscn_owner_data != null">
+                ({{ iscn_owner_data.displayName }})
+              </span>
+            </a>
+          </span>
+        </p>
+        <section
+          v-if="class_metadata_valid"
+          class="mt-4 vertical-middle space-x-1"
+        >
           <NButton
-            class="ml-2"
             icon="carbon:filter"
             n="green xs"
             @click="emit('filter_by_creator_address', class_metadata.iscn_owner)"
           >
             {{ t("View NFTs by This Creator") }}
           </NButton>
-        </span>
-      </p>
+          <NButton
+            v-if="creator_bookmarked != null && !creator_bookmarked"
+            icon="carbon:bookmark-add"
+            n="green xs"
+            @click="emit('bookmark_creator_address', class_metadata.iscn_owner)"
+          >
+            {{ t("Bookmark This Creator") }}
+          </NButton>
+          <NButton
+            v-if="creator_bookmarked != null && creator_bookmarked"
+            icon="carbon:trash-can"
+            n="red xs"
+            @click="emit('unbookmark_creator_address', class_metadata.iscn_owner)"
+          >
+            {{ t("Unbookmark This Creator") }}
+          </NButton>
+        </section>
+      </section>
       <p class="mt-4">
-        {{ nft_class.description }}
+        {{ props.nft_class.description }}
       </p>
       <p class="mt-4" v-if="!class_metadata_loading && class_metadata_error == null">
         <img :src="class_metadata.image" loading="lazy" />
@@ -64,6 +86,7 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
 import { useI18n } from '#i18n'
 import { useAsyncData } from "nuxt/app"
 import dayjs from 'dayjs'
@@ -74,12 +97,15 @@ interface ClassMetadata {
 
 const emit = defineEmits<{
   (e: 'filter_by_creator_address', address: string): void
+
+  (e: 'bookmark_creator_address', address: string): void
+  (e: 'unbookmark_creator_address', address: string): void
 }>()
 
 const I18n = useI18n()
 const { t } = I18n
 
-const { nft_class } = defineProps({
+const props = defineProps({
   nft_class: {
     type: Object,
     validator(value: {[key: string]: unknown}) {
@@ -90,6 +116,9 @@ const { nft_class } = defineProps({
       })
     },
   },
+  all_bookmarked_creator_addresses: {
+    type: Set,
+  },
 })
 
 const {
@@ -99,7 +128,7 @@ const {
 } = useAsyncData(
   [
     "class_purchase_data",
-    nft_class.id,
+    props.nft_class.id,
   ].join("/"),
   (() => {
     // https://docs.like.co/developer/likenft/api-reference
@@ -107,7 +136,7 @@ const {
       "https://api.like.co/likernft/purchase",
       {
         params: {
-          class_id: nft_class.id,
+          class_id: props.nft_class.id,
         },
       }
     )
@@ -118,7 +147,7 @@ const fetch_class_metadata_promise = $fetch<ClassMetadata>(
   "https://api.like.co/likernft/metadata",
   {
     params: {
-      iscn_id: nft_class.parent.iscn_id_prefix,
+      iscn_id: props.nft_class.parent.iscn_id_prefix,
     },
   }
 )
@@ -130,13 +159,20 @@ const {
 } = useAsyncData(
   [
     "class_metadata",
-    nft_class.parent.iscn_id_prefix,
+    props.nft_class.parent.iscn_id_prefix,
   ].join("/"),
   (() => {
     // https://docs.like.co/developer/likenft/api-reference
     return fetch_class_metadata_promise
   })
 )
+const class_metadata_valid = computed(() => !class_metadata_loading.value && class_metadata_error.value == null)
+
+const creator_bookmarked = computed(() => {
+  if (class_metadata_valid.value) {
+    return props.all_bookmarked_creator_addresses.has(class_metadata.value.iscn_owner)
+  }
+})
 
 const {
   pending:  iscn_owner_data_loading,
@@ -145,7 +181,7 @@ const {
 } = useAsyncData(
   [
     "iscn_owner_data",
-    nft_class.parent.iscn_id_prefix,
+    props.nft_class.parent.iscn_id_prefix,
   ].join("/"),
   (() => {
     return fetch_class_metadata_promise
@@ -160,6 +196,39 @@ const {
 </script>
 
 
+<style lang="scss" scoped>
+
+.writing-nft-entry-box {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  display: flex;
+  flex: 1;
+  justify-content: center;
+
+  &:first-child {
+    // Avoid unexpected spacing
+    padding-top: 0;
+  }
+
+  &__main-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+  }
+  &__image {
+    margin-left: auto;
+
+    img {
+      height: 100px;
+    }
+  }
+}
+
+</style>
+
+
 <i18n lang="yaml">
 en:
   NFT Page on Liker Land: NFT Page on Liker Land
@@ -167,7 +236,10 @@ en:
   Current Price: Current Price
   Sold: Sold
   ISCN Owner: ISCN Owner
+
   View NFTs by This Creator: View NFTs by This Creator
+  Bookmark This Creator: Bookmark This Creator
+  Unbookmark This Creator: Unbookmark This Creator
 
 zh:
   NFT Page on Liker Land: Liker Land上的NFT頁面
@@ -175,5 +247,8 @@ zh:
   Current Price: 現時價格
   Sold: 已賣出
   ISCN Owner: ISCN 擁有者
-  View NFTs by This Creator: 查看此創造者的NFT
+
+  View NFTs by This Creator: 只看此創造者的NFT
+  Bookmark This Creator: 將此創造者加入書籤清單
+  Unbookmark This Creator: 將此創造者踢出書籤清單
 </i18n>

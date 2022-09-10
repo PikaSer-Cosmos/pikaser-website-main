@@ -19,7 +19,11 @@
   },
   "dependencies": {
     "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge",
+    "@pinia/nuxt": "^0.4.2",
+    "@vueuse/core": "^9.2.0",
     "dayjs": "^1.11.5",
+    "pinia": "^2.0.22",
+    "superjson": "^1.9.1",
     "urijs": "^1.19.11"
   },
   "engines": {

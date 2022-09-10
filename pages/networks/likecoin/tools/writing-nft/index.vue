@@ -42,14 +42,14 @@
           <section>
             <NTextInput
               icon="carbon:person"
-              :placeholder='t("Creator")'
+              :placeholder='t("NFT Creator")'
               v-model="recent_writing_nfts_data_creator_address"
             />
           </section>
           <section>
             <NTextInput
               icon="carbon:person-favorite"
-              :placeholder='t("Collector")'
+              :placeholder='t("NFT Collector")'
               v-model="recent_writing_nfts_data_collector_address"
             />
           </section>
@@ -299,8 +299,8 @@ en:
 
   Display at most: Display at most
   In last N days: In last N days
-  Creator: Creator
-  Collector: Collector
+  NFT Creator: NFT Creator
+  NFT Collector: NFT Collector
 
   Loading...: Loading...
 
@@ -317,8 +317,8 @@ zh:
 
   Display at most: 顯示最多
   In last N days: 限最近多少日
-  Creator: 創造者
-  Collector: 收藏者
+  NFT Creator: NFT 創造者
+  NFT Collector: NFT 收藏者
 
   Loading...: 蕉蕉發電中…
 

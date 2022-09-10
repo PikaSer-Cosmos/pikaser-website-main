@@ -53,8 +53,38 @@
               v-model="recent_writing_nfts_data_collector_address"
             />
           </section>
+          <section
+            v-if="writingNftFollowingCreatorAddressListStore.has_any_address"
+            class="pt-2 border-t-1"
+          >
+            <div class="flex flex-1">
+              <h3 class="inline-flex">
+                {{ t("Bookmarked Creators") }}
+              </h3>
+              <NSwitch
+                class="ml-2"
+                n="lime6 dark:lime5 sm"
+                :model-value="writing_nft_bookmarked_creator_list_visible"
+                @update:model-value="(checked) => writing_nft_bookmarked_creator_list_visible = checked"
+              >
+                {{ t("Toggle") }}
+              </NSwitch>
+            </div>
+            <div
+              v-if="writing_nft_bookmarked_creator_list_visible"
+              class="mt-2"
+            >
+              <WritingNFTBookmarkedCreatorEntryBox
+                v-for="creator_address of writingNftFollowingCreatorAddressListStore.address_list_array"
+                :key="creator_address"
+                :creator_address="creator_address"
+                @filter_by_creator_address="(address) => recent_writing_nfts_data_creator_address = address"
+                @unbookmark_creator_address="(address) => writingNftFollowingCreatorAddressListStore.removeOneAddress(address)"
+              />
+            </div>
+          </section>
         </section>
-        <section class="pt-4 mt-4 border-t-1">
+        <section class="mt-2 pt-4 border-t-1">
           <div v-if="recent_writing_nfts_data_loading">
             <p>
               {{ t("Loading...") }}
@@ -66,7 +96,10 @@
                 v-for="nft_class of all_recent_writing_nft_class_entries"
                 :key="nft_class.id"
                 :nft_class="nft_class"
+                :all_bookmarked_creator_addresses="writingNftFollowingCreatorAddressListStore.address_list"
                 @filter_by_creator_address="(address) => recent_writing_nfts_data_creator_address = address"
+                @bookmark_creator_address="(address) => writingNftFollowingCreatorAddressListStore.addOneAddress(address)"
+                @unbookmark_creator_address="(address) => writingNftFollowingCreatorAddressListStore.removeOneAddress(address)"
               />
             </div>
             <div>
@@ -94,6 +127,10 @@ import { useAsyncData } from "nuxt/app"
 import dayjs from 'dayjs'
 
 import WritingNFTEntryBox from './_WritingNFTEntryBox.vue'
+import WritingNFTBookmarkedCreatorEntryBox from './_WritingNFTBookmarkedCreatorEntryBox.vue'
+import { useWritingNftFollowingCreatorAddressListStore } from "./composables/writing_nft_following_creator_list"
+
+const writingNftFollowingCreatorAddressListStore = useWritingNftFollowingCreatorAddressListStore()
 
 const I18n = useI18n()
 const { t } = useI18n()
@@ -127,6 +164,9 @@ const recent_writing_nfts_data_time_limit_in_days = ref(recent_writing_nfts_data
 
 const recent_writing_nfts_data_creator_address = ref('')
 const recent_writing_nfts_data_collector_address = ref('')
+
+const writing_nft_bookmarked_creator_list_visible = ref(false)
+
 
 const {
   pending: recent_writing_nfts_data_loading,
@@ -257,35 +297,6 @@ a {
   }
 }
 
-
-.writing-nft-entry-box {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-
-  display: flex;
-  flex: 1;
-  justify-content: center;
-
-  &:first-child {
-    // Avoid unexpected spacing
-    padding-top: 0;
-  }
-
-  &__main-content {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
-  }
-  &__image {
-    margin-left: auto;
-
-    img {
-      height: 100px;
-    }
-  }
-}
-
 </style>
 
 
@@ -301,6 +312,9 @@ en:
   In last N days: In last N days
   NFT Creator: NFT Creator
   NFT Collector: NFT Collector
+
+  Bookmarked Creators: Bookmarked Creators
+  Toggle: Toggle
 
   Loading...: Loading...
 
@@ -319,6 +333,9 @@ zh:
   In last N days: 限最近多少日
   NFT Creator: NFT 創造者
   NFT Collector: NFT 收藏者
+
+  Bookmarked Creators: NFT 創造者書籤清單
+  Toggle: 顯示/隱藏
 
   Loading...: 蕉蕉發電中…
 

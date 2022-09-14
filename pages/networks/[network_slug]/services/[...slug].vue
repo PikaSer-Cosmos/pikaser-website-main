@@ -19,7 +19,7 @@
 
 <script setup>
 import { useI18n } from '#i18n'
-import { useAsyncData } from "nuxt/app"
+import { useAsyncData } from "#imports"
 
 const I18n = useI18n()
 const { t } = useI18n()

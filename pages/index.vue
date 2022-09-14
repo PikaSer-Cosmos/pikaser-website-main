@@ -38,9 +38,10 @@
             </span>
           </div>
           <div class="page-entry-box__image">
-            <img
-              :src="post.list_item_image_path"
+            <nuxt-img
               v-if="post.list_item_image_path"
+              :src="post.list_item_image_path"
+              loading="lazy"
             />
           </div>
         </article>
@@ -53,7 +54,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useI18n } from '#i18n'
-import { useAsyncData, useHead } from "nuxt/app"
+import { useAsyncData, useHead } from "#imports"
 
 const I18n = useI18n()
 const { t } = I18n

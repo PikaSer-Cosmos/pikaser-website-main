@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { useI18n } from '#i18n'
-import { useAsyncData } from "nuxt/app"
+import { useAsyncData } from "#imports"
 
 const emit = defineEmits<{
   (e: 'filter_by_creator_address', address: string): void

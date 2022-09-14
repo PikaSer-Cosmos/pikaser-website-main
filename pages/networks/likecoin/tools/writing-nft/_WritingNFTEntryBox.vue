@@ -88,7 +88,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { useI18n } from '#i18n'
-import { useAsyncData } from "nuxt/app"
+import { useAsyncData } from "#imports"
 import dayjs from 'dayjs'
 
 interface ClassMetadata {

@@ -38,9 +38,10 @@
             </span>
           </div>
           <div class="page-entry-box__image">
-            <img
-              :src="post.list_item_image_path"
+            <nuxt-img
               v-if="post.list_item_image_path"
+              :src="post.list_item_image_path"
+              loading="lazy"
             />
           </div>
         </article>

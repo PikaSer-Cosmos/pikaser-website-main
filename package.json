@@ -18,8 +18,8 @@
     "vue": "^3.2.37"
   },
   "dependencies": {
-    "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge",
     "@nuxt/kit": "npm:@nuxt/kit-edge",
+    "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge",
     "@pinia/nuxt": "^0.4.2",
     "@vueuse/core": "^9.2.0",
     "dayjs": "^1.11.5",

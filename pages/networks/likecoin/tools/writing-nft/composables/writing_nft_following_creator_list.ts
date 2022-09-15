@@ -19,11 +19,9 @@ export const useWritingNftFollowingCreatorAddressListStore = defineStore("Likeco
   }),
   getters: {
     has_any_address(state): boolean {
-      // return (state.address_list?.size || 0) > 0
       return state.address_list.size > 0
     },
     address_list_array(state): string[] {
-      // return (state.address_list?.size || 0) > 0
       return Array.from(state.address_list)
     },
   },

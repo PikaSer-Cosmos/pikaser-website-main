@@ -61,6 +61,11 @@
               <h3 class="inline-flex">
                 {{ t("Bookmarked Creators") }}
               </h3>
+              <span
+                class="ml-2"
+              >
+                ({{ writingNftFollowingCreatorAddressListStore.address_list_array.length }})
+              </span>
               <NSwitch
                 class="ml-2"
                 n="lime6 dark:lime5 sm"

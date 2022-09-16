@@ -1,5 +1,5 @@
 <template>
-  <article class="writing-nft-entry-box">
+  <article class="writing-nft-entry-box" v-if="entry_visible">
     <div class="writing-nft-entry-box__main-content">
       <h3 class="text-lg">
         <a :href="props.nft_class.metadata.external_url || `https://liker.land/nft/class/${props.nft_class.id}`" target="_blank" rel="noreferrer noopener">
@@ -119,6 +119,9 @@ const props = defineProps({
   all_bookmarked_creator_addresses: {
     type: Set,
   },
+  only_writing_nft_from_bookmarked_creator_visible: {
+    type: Boolean,
+  },
 })
 
 const {
@@ -166,12 +169,14 @@ const {
     return fetch_class_metadata_promise
   })
 )
-const class_metadata_valid = computed(() => !class_metadata_loading.value && class_metadata_error.value == null)
+const class_metadata_valid = computed<boolean>(() => !class_metadata_loading.value && class_metadata_error.value == null)
 
-const creator_bookmarked = computed(() => {
+const creator_bookmarked = computed<boolean>(() => {
   if (class_metadata_valid.value) {
     return props.all_bookmarked_creator_addresses.has(class_metadata.value.iscn_owner)
   }
+
+  return false
 })
 
 const {
@@ -192,6 +197,15 @@ const {
     })
   })
 )
+
+
+const entry_visible = computed<boolean>(() => {
+  if (!props.only_writing_nft_from_bookmarked_creator_visible) {
+    return true
+  }
+
+  return creator_bookmarked.value
+})
 
 </script>
 

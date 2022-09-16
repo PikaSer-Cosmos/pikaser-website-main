@@ -74,6 +74,14 @@
               >
                 {{ t("Toggle") }}
               </NSwitch>
+              <NSwitch
+                class="ml-2"
+                n="lime6 dark:lime5 sm"
+                :model-value="only_writing_nft_from_bookmarked_creator_visible_input"
+                @update:model-value="(checked) => only_writing_nft_from_bookmarked_creator_visible_input = checked"
+              >
+                {{ t("Only Show Their Created NFTs") }}
+              </NSwitch>
             </div>
             <div
               v-if="writing_nft_bookmarked_creator_list_visible"
@@ -102,6 +110,7 @@
                 :key="nft_class.id"
                 :nft_class="nft_class"
                 :all_bookmarked_creator_addresses="writingNftFollowingCreatorAddressListStore.address_list"
+                :only_writing_nft_from_bookmarked_creator_visible="only_writing_nft_from_bookmarked_creator_visible"
                 @filter_by_creator_address="(address) => recent_writing_nfts_data_creator_address = address"
                 @bookmark_creator_address="(address) => writingNftFollowingCreatorAddressListStore.addOneAddress(address)"
                 @unbookmark_creator_address="(address) => writingNftFollowingCreatorAddressListStore.removeOneAddress(address)"
@@ -171,6 +180,14 @@ const recent_writing_nfts_data_creator_address = ref('')
 const recent_writing_nfts_data_collector_address = ref('')
 
 const writing_nft_bookmarked_creator_list_visible = ref(false)
+const only_writing_nft_from_bookmarked_creator_visible_input = ref(false)
+const only_writing_nft_from_bookmarked_creator_visible = computed(() => {
+  if (!only_writing_nft_from_bookmarked_creator_visible_input.value) { return false }
+
+  // If no creator bookmarked, disable the feature to avoid having empty list
+  // Which can't be turned off easily
+  return writingNftFollowingCreatorAddressListStore.has_any_address
+})
 
 
 const {
@@ -320,6 +337,7 @@ en:
 
   Bookmarked Creators: Bookmarked Creators
   Toggle: Toggle
+  Only Show Their Created NFTs: Only Show Their Created NFTs
 
   Loading...: Loading...
 
@@ -341,6 +359,7 @@ zh:
 
   Bookmarked Creators: NFT 創造者書籤清單
   Toggle: 顯示/隱藏
+  Only Show Their Created NFTs: 只顯示他們創造的NFT
 
   Loading...: 蕉蕉發電中…
 

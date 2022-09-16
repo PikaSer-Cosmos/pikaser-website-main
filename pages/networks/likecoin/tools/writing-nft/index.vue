@@ -57,7 +57,7 @@
             <NSwitch
               n="lime6 dark:lime5 sm"
               :model-value="only_writing_nft_with_complete_data_visible_input"
-              @update:model-value="(checked) => only_writing_nft_with_complete_data_visible_input = checked"
+              @update:model-value="(checked) => update_only_writing_nft_with_complete_data_visible_input(checked)"
             >
               {{ t(`Only Show "Complete" NFTs`) }}
             </NSwitch>
@@ -152,8 +152,10 @@ import dayjs from 'dayjs'
 
 import WritingNFTEntryBox from './_WritingNFTEntryBox.vue'
 import WritingNFTBookmarkedCreatorEntryBox from './_WritingNFTBookmarkedCreatorEntryBox.vue'
+import { useWritingNftOptionsStore } from "./composables/writing_nft_options"
 import { useWritingNftFollowingCreatorAddressListStore } from "./composables/writing_nft_following_creator_list"
 
+const writingNftOptionsStore = useWritingNftOptionsStore()
 const writingNftFollowingCreatorAddressListStore = useWritingNftFollowingCreatorAddressListStore()
 
 const I18n = useI18n()
@@ -188,7 +190,12 @@ const recent_writing_nfts_data_time_limit_in_days = ref(recent_writing_nfts_data
 
 const recent_writing_nfts_data_creator_address = ref('')
 const recent_writing_nfts_data_collector_address = ref('')
-const only_writing_nft_with_complete_data_visible_input = ref(false)
+
+const only_writing_nft_with_complete_data_visible_input = ref(writingNftOptionsStore.only_writing_nft_with_complete_data_visible)
+function update_only_writing_nft_with_complete_data_visible_input(val) {
+  only_writing_nft_with_complete_data_visible_input.value = val
+  writingNftOptionsStore.update_only_writing_nft_with_complete_data_visible(val)
+}
 
 const writing_nft_bookmarked_creator_list_visible = ref(false)
 const only_writing_nft_from_bookmarked_creator_visible_input = ref(false)

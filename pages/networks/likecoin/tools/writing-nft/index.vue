@@ -274,7 +274,6 @@ const earliest_writing_nft_created_at_in_unix = computed(() => {
   return all_recent_writing_nft_class_entries.value.at(-1).created_at_in_unix
 })
 const more_nft_being_loaded = ref(false)
-const more_nft_can_be_loaded = ref(true)
 
 const load_more_button_enabled = ref(true)
 const load_more_button_text = computed(() => {
@@ -326,7 +325,6 @@ function load_more_recent_writing_nft_class_entries() {
     all_recent_writing_nft_class_entries.value = all_recent_writing_nft_class_entries.value.concat(nft_classes)
     // Disable button AND hide it if it seems to be end of all entries
     load_more_button_enabled.value  = nft_classes.length !== 0
-    more_nft_can_be_loaded.value    = nft_classes.length !== 0
   })
   .catch(() => {
     // For retry

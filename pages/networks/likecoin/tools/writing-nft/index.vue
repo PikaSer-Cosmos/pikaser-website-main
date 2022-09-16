@@ -39,19 +39,37 @@
               </option>
             </select>
           </section>
-          <section>
+          <section class="flex">
             <NTextInput
+              class="flex-grow-1"
               icon="carbon:person"
               :placeholder='t("NFT Creator")'
               v-model="recent_writing_nfts_data_creator_address"
             />
+            <NButton
+              class="ml-2 flex-grow-0"
+              icon="carbon:clean"
+              n="green s"
+              @click="recent_writing_nfts_data_creator_address = ''"
+            >
+              {{ t("Clear") }}
+            </NButton>
           </section>
-          <section>
+          <section class="flex">
             <NTextInput
+              class="flex-grow-1"
               icon="carbon:person-favorite"
               :placeholder='t("NFT Collector")'
               v-model="recent_writing_nfts_data_collector_address"
             />
+            <NButton
+              class="ml-2 flex-grow-0"
+              icon="carbon:clean"
+              n="green s"
+              @click="recent_writing_nfts_data_collector_address = ''"
+            >
+              {{ t("Clear") }}
+            </NButton>
           </section>
           <section>
             <NSwitch
@@ -352,6 +370,7 @@ en:
   In last N days: In last N days
   NFT Creator: NFT Creator
   NFT Collector: NFT Collector
+  Clear: Clear
   Only Show "Complete" NFTs: Only Show "Complete" NFTs
 
   Bookmarked Creators: Bookmarked Creators
@@ -375,6 +394,7 @@ zh:
   In last N days: 限最近多少日
   NFT Creator: NFT 創造者
   NFT Collector: NFT 收藏者
+  Clear: 清除
   Only Show "Complete" NFTs: 只顯示"完整"的NFT
 
   Bookmarked Creators: NFT 創造者書籤清單

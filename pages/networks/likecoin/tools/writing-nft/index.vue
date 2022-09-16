@@ -53,6 +53,15 @@
               v-model="recent_writing_nfts_data_collector_address"
             />
           </section>
+          <section>
+            <NSwitch
+              n="lime6 dark:lime5 sm"
+              :model-value="only_writing_nft_with_complete_data_visible_input"
+              @update:model-value="(checked) => only_writing_nft_with_complete_data_visible_input = checked"
+            >
+              {{ t(`Only Show "Complete" NFTs`) }}
+            </NSwitch>
+          </section>
           <section
             v-if="writingNftFollowingCreatorAddressListStore.has_any_address"
             class="pt-2 border-t-1"
@@ -109,6 +118,7 @@
                 v-for="nft_class of all_recent_writing_nft_class_entries"
                 :key="nft_class.id"
                 :nft_class="nft_class"
+                :only_writing_nft_with_complete_data_visible_input="only_writing_nft_with_complete_data_visible_input"
                 :all_bookmarked_creator_addresses="writingNftFollowingCreatorAddressListStore.address_list"
                 :only_writing_nft_from_bookmarked_creator_visible="only_writing_nft_from_bookmarked_creator_visible"
                 @filter_by_creator_address="(address) => recent_writing_nfts_data_creator_address = address"
@@ -178,6 +188,7 @@ const recent_writing_nfts_data_time_limit_in_days = ref(recent_writing_nfts_data
 
 const recent_writing_nfts_data_creator_address = ref('')
 const recent_writing_nfts_data_collector_address = ref('')
+const only_writing_nft_with_complete_data_visible_input = ref(false)
 
 const writing_nft_bookmarked_creator_list_visible = ref(false)
 const only_writing_nft_from_bookmarked_creator_visible_input = ref(false)
@@ -334,6 +345,7 @@ en:
   In last N days: In last N days
   NFT Creator: NFT Creator
   NFT Collector: NFT Collector
+  Only Show "Complete" NFTs: Only Show "Complete" NFTs
 
   Bookmarked Creators: Bookmarked Creators
   Toggle: Toggle
@@ -356,6 +368,7 @@ zh:
   In last N days: 限最近多少日
   NFT Creator: NFT 創造者
   NFT Collector: NFT 收藏者
+  Only Show "Complete" NFTs: 只顯示"完整"的NFT
 
   Bookmarked Creators: NFT 創造者書籤清單
   Toggle: 顯示/隱藏

@@ -116,6 +116,11 @@ const props = defineProps({
       })
     },
   },
+
+  only_writing_nft_with_complete_data_visible_input: {
+    type: Boolean,
+  },
+
   all_bookmarked_creator_addresses: {
     type: Set,
   },
@@ -145,6 +150,7 @@ const {
     )
   })
 )
+const class_purchase_data_valid = computed<boolean>(() => !class_purchase_data_loading.value && class_purchase_data_error.value == null)
 
 const fetch_class_metadata_promise = $fetch<ClassMetadata>(
   "https://api.like.co/likernft/metadata",
@@ -200,11 +206,15 @@ const {
 
 
 const entry_visible = computed<boolean>(() => {
-  if (!props.only_writing_nft_from_bookmarked_creator_visible) {
-    return true
+  if (props.only_writing_nft_with_complete_data_visible_input && !class_purchase_data_valid.value) {
+    return false
   }
 
-  return creator_bookmarked.value
+  if (props.only_writing_nft_from_bookmarked_creator_visible) {
+    return creator_bookmarked.value
+  }
+
+  return true
 })
 
 </script>

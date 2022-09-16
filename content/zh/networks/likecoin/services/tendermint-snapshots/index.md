@@ -6,7 +6,7 @@ description: 'LikeCoin 驗證人節點用備份'
 ## 備份
 備份元資料 JSON 網址:
 ```
-https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/snapshot.json
+https://pikaser-cosmos-nodes-snapshots-sia.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/snapshot.json
 ```
 
 ### 壓縮格式
@@ -26,7 +26,7 @@ https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-m
 
 確保環境變數包含
 ```yaml
-SNAPSHOT_JSON: https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/snapshot.json
+SNAPSHOT_JSON: https://pikaser-cosmos-nodes-snapshots-sia.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/snapshot.json
 
 ```
 
@@ -36,10 +36,10 @@ JSON 檔內容格式應為以下所示
 {
   "chain_id": "likecoin-mainnet-2",
   "snapshots": [
-    "https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-28T23:05:00.tar.zst",
-    "https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-29T23:05:00.tar.zst"
+    "https://pikaser-cosmos-nodes-snapshots-sia.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-28T23:05:00.tar.zst",
+    "https://pikaser-cosmos-nodes-snapshots-sia.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-29T23:05:00.tar.zst"
   ],
-  "latest": "https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-29T23:05:00.tar.zst"
+  "latest": "https://pikaser-cosmos-nodes-snapshots-sia.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-29T23:05:00.tar.zst"
 }
 
 ```

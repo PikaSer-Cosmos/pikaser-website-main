@@ -6,7 +6,7 @@ description: 'LikeCoin snapshots for validators'
 ## Snapshots
 Snapshot metadata JSON URL:
 ```
-https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/snapshot.json
+https://pikaser-cosmos-nodes-snapshots-sia.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/snapshot.json
 ```
 
 ### Archive Format
@@ -26,7 +26,7 @@ Use Docker image https://github.com/ovrclk/cosmos-omnibus with version `>= 0.3.2
 
 Ensure environment variables include:
 ```yaml
-SNAPSHOT_JSON: https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/snapshot.json
+SNAPSHOT_JSON: https://pikaser-cosmos-nodes-snapshots-sia.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/snapshot.json
 
 ```
 
@@ -36,10 +36,10 @@ The content of the JSON file should look like the following
 {
   "chain_id": "likecoin-mainnet-2",
   "snapshots": [
-    "https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-28T23:05:00.tar.zst",
-    "https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-29T23:05:00.tar.zst"
+    "https://pikaser-cosmos-nodes-snapshots-sia.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-28T23:05:00.tar.zst",
+    "https://pikaser-cosmos-nodes-snapshots-sia.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-29T23:05:00.tar.zst"
   ],
-  "latest": "https://pikaser-cosmos-nodes-snapshots-storj.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-29T23:05:00.tar.zst"
+  "latest": "https://pikaser-cosmos-nodes-snapshots-sia.s3.filebase.com/likecoin/likecoin-mainnet-2/snapshots/likecoin-mainnet-2_2022-08-29T23:05:00.tar.zst"
 }
 
 ```

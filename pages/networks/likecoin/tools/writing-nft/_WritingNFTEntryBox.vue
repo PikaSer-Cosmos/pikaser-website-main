@@ -11,7 +11,7 @@
           {{ t("NFT Page on Liker Land") }}
         </a>
         <span> - </span>
-        <span>{{ dayjs(props.nft_class.created_at).format("YYYY-MM-DD") }}</span>
+        <span>{{ dayjs(props.nft_class.created_at).format("YYYY-MM-DD HH:mm:ss") }}</span>
         <span> - </span>
         <a :href="`https://app.like.co/view/${encodeURIComponent(props.nft_class.parent.iscn_id_prefix)}`" target="_blank" rel="noreferrer noopener">
           {{ t("On-Chain Data") }}

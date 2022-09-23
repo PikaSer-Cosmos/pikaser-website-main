@@ -278,6 +278,8 @@ const only_writing_nft_from_bookmarked_creator_visible = computed(() => {
 })
 
 
+let last_used_earliest_time_in_unix_time = null
+
 const {
   pending: recent_writing_nfts_data_loading,
   data: recent_writing_nft_class_entries,
@@ -286,7 +288,9 @@ const {
     "recent_writing_nfts_data",
   ].join("/"),
   (() => {
-    const earliest_time_in_unix_time = dayjs().subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days').unix()
+    const earliest_time_in_unix_time =
+      dayjs().subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days').unix()
+    last_used_earliest_time_in_unix_time = earliest_time_in_unix_time
 
     // https://docs.like.co/developer/likenft/api-reference
     return $fetch<unknown>(
@@ -312,6 +316,10 @@ const {
       return []
     },
     transform: ((data): LikeCoinNftClassModified[] => {
+      // Save time limit used
+      earliest_writing_nft_created_at_limit_searched_in_unix.value =
+        last_used_earliest_time_in_unix_time
+
       return data.classes.map((nft_class) => {
         nft_class.created_at_in_unix = dayjs(nft_class.created_at).unix()
         return nft_class
@@ -325,6 +333,7 @@ const all_recent_writing_nft_class_entries = ref(recent_writing_nft_class_entrie
 const earliest_writing_nft_created_at_in_unix = computed(() => {
   return all_recent_writing_nft_class_entries.value.at(-1).created_at_in_unix
 })
+const earliest_writing_nft_created_at_limit_searched_in_unix = ref(Date.now())
 const more_nft_being_loaded = ref(false)
 
 const load_more_button_enabled = ref(true)
@@ -334,7 +343,12 @@ const load_more_button_text = computed(() => {
   }
 
   if (load_more_button_enabled.value) {
-    return t("Is There More～")
+    const text = `${t("Is There More～")}`
+    if (earliest_writing_nft_created_at_limit_searched_in_unix.value != null) {
+      const formatted_time = dayjs.unix(earliest_writing_nft_created_at_limit_searched_in_unix.value).format("YYYY-MM-DD HH:mm:ss")
+      return `${text} (${t("Before Time", {time: formatted_time})})`
+    }
+    return text
   }
 
   // Probably nothing left
@@ -347,15 +361,16 @@ function load_more_recent_writing_nft_class_entries() {
   more_nft_being_loaded.value = true
 
   const earliest_time_in_unix_time =
-    dayjs.unix(earliest_writing_nft_created_at_in_unix.value)
+    dayjs.unix(earliest_writing_nft_created_at_limit_searched_in_unix.value)
     .subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days')
     .unix()
+  last_used_earliest_time_in_unix_time = earliest_time_in_unix_time
 
   $fetch<RankingEndpointResponse>(
     "https://mainnet-node.like.co/likechain/likenft/v1/ranking",
     {
       params: {
-        before:     earliest_writing_nft_created_at_in_unix.value,
+        before:     earliest_writing_nft_created_at_limit_searched_in_unix.value,
         after:      earliest_time_in_unix_time,
         limit:      recent_writing_nfts_data_pagination_limit.value,
         creator:    recent_writing_nfts_data_creator_address.value,
@@ -364,6 +379,10 @@ function load_more_recent_writing_nft_class_entries() {
     }
   )
   .then((data): LikeCoinNftClassModified[] => {
+    // Save time limit used
+    earliest_writing_nft_created_at_limit_searched_in_unix.value =
+      last_used_earliest_time_in_unix_time
+
     // "Flatten" it to array
     if (data.classes == null) { return [] }
 
@@ -379,14 +398,9 @@ function load_more_recent_writing_nft_class_entries() {
   })
   .then((nft_classes) => {
     all_recent_writing_nft_class_entries.value = all_recent_writing_nft_class_entries.value.concat(nft_classes)
-    // Disable button AND hide it if it seems to be end of all entries
-    load_more_button_enabled.value  = nft_classes.length !== 0
-  })
-  .catch(() => {
-    // For retry
-    load_more_button_enabled.value = true
   })
   .finally(() => {
+    load_more_button_enabled.value  = true
     more_nft_being_loaded.value = false
   })
 }
@@ -500,6 +514,7 @@ en:
   Loading...: Loading...
 
   Is There More～: Is There More～
+  Before Time: Before {time}
   Loading More...: Loading More...
   Nothing left...: Nothing left...
 
@@ -524,6 +539,7 @@ zh:
   Loading...: 蕉蕉發電中…
 
   Is There More～: 還有更多嗎～
+  Before Time: 在 {time} 以前
   Loading More...: 正在尋找更多…
   Nothing left...: 然後就沒有然後了…
 </i18n>

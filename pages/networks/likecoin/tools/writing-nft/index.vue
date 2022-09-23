@@ -64,6 +64,14 @@
             />
             <NButton
               class="ml-2 flex-grow-0"
+              icon="carbon:link"
+              n="purple s"
+              @click="read_likecoin_address_from_keplr"
+            >
+              {{ t("Keplr") }}
+            </NButton>
+            <NButton
+              class="ml-2 flex-grow-0"
               icon="carbon:clean"
               n="green s"
               @click="recent_writing_nfts_data_collector_address = ''"
@@ -162,22 +170,66 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { computed, ref } from "vue"
 import { useI18n } from '#i18n'
 import { useAsyncData } from "#imports"
 import dayjs from 'dayjs'
+import { ChainInfo } from "@keplr-wallet/types"
 
 import WritingNFTEntryBox from './_WritingNFTEntryBox.vue'
 import WritingNFTBookmarkedCreatorEntryBox from './_WritingNFTBookmarkedCreatorEntryBox.vue'
 import { useWritingNftOptionsStore } from "./composables/writing_nft_options"
 import { useWritingNftFollowingCreatorAddressListStore } from "./composables/writing_nft_following_creator_list"
 
+
+interface LikeCoinNftClass {
+  "id": string
+  "name": string
+  "description": string
+  "uri": string
+  "config": {
+    "burnable": boolean
+    "max_supply": string
+    "blind_box_config": unknown
+  },
+  "metadata": {
+    "image": string
+    "description": string
+    "external_url": string
+    "nft_meta_collection_id": string
+    "nft_meta_collection_name": string
+    "nft_meta_collection_descrption": string
+  },
+  "parent": {
+    "type": string
+    "iscn_id_prefix": string
+    "account": string
+  },
+  "price": number
+  "created_at": string
+}
+type LikeCoinNftClassModified = LikeCoinNftClass & {
+  created_at_in_unix: number
+}
+
+interface RankingEndpointResponse {
+  classes: LikeCoinNftClass[]
+  "pagination": {
+    "next_key": number,
+    "count": number
+  }
+}
+
+
 const writingNftOptionsStore = useWritingNftOptionsStore()
 const writingNftFollowingCreatorAddressListStore = useWritingNftFollowingCreatorAddressListStore()
 
 const I18n = useI18n()
 const { t } = useI18n()
+
+// RPC from https://github.com/likecoin/mainnet
+// const likecoin_stargate_client = await StargateClient.connect("https://mainnet-node-rpc.like.co/")
 
 
 useHead({
@@ -229,7 +281,7 @@ const only_writing_nft_from_bookmarked_creator_visible = computed(() => {
 const {
   pending: recent_writing_nfts_data_loading,
   data: recent_writing_nft_class_entries,
-} = useAsyncData(
+} = useAsyncData<LikeCoinNftClassModified[]>(
   [
     "recent_writing_nfts_data",
   ].join("/"),
@@ -237,7 +289,7 @@ const {
     const earliest_time_in_unix_time = dayjs().subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days').unix()
 
     // https://docs.like.co/developer/likenft/api-reference
-    return $fetch(
+    return $fetch<unknown>(
       "https://mainnet-node.like.co/likechain/likenft/v1/ranking",
       {
         params: {
@@ -256,10 +308,10 @@ const {
       recent_writing_nfts_data_creator_address,
       recent_writing_nfts_data_collector_address,
     ],
-    default: () => {
+    default: (): LikeCoinNftClassModified[] => {
       return []
     },
-    transform: ((data) => {
+    transform: ((data): LikeCoinNftClassModified[] => {
       return data.classes.map((nft_class) => {
         nft_class.created_at_in_unix = dayjs(nft_class.created_at).unix()
         return nft_class
@@ -299,7 +351,7 @@ function load_more_recent_writing_nft_class_entries() {
     .subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days')
     .unix()
 
-  $fetch(
+  $fetch<RankingEndpointResponse>(
     "https://mainnet-node.like.co/likechain/likenft/v1/ranking",
     {
       params: {
@@ -311,13 +363,17 @@ function load_more_recent_writing_nft_class_entries() {
       },
     }
   )
-  .then((data) => {
+  .then((data): LikeCoinNftClassModified[] => {
     // "Flatten" it to array
     if (data.classes == null) { return [] }
 
     return data.classes.map((nft_class) => {
-      nft_class.created_at_in_unix = dayjs(nft_class.created_at).unix()
-      return nft_class
+      return Object.assign(
+        nft_class,
+        {
+          created_at_in_unix: dayjs(nft_class.created_at).unix(),
+        }
+      )
     })
     .sort((a, b) => b.created_at_in_unix - a.created_at_in_unix)
   })
@@ -333,6 +389,72 @@ function load_more_recent_writing_nft_class_entries() {
   .finally(() => {
     more_nft_being_loaded.value = false
   })
+}
+
+
+// https://github.com/likecoin/mainnet/blob/master/keplr.json
+const likecoin_chaininfo: ChainInfo = {
+  "chainId": "likecoin-mainnet-2",
+  "chainName": "LikeCoin",
+  "rpc": "https://mainnet-node.like.co/rpc/",
+  "rest": "https://mainnet-node.like.co",
+  "stakeCurrency": {
+    "coinDenom": "LIKE",
+    "coinMinimalDenom": "nanolike",
+    "coinDecimals": 9,
+    "coinGeckoId": "likecoin"
+  },
+  "walletUrlForStaking": "https://stake.like.co",
+  "bip44": {
+    "coinType": 118
+  },
+  "bech32Config": {
+    "bech32PrefixAccAddr": "like",
+    "bech32PrefixAccPub": "likepub",
+    "bech32PrefixValAddr": "likevaloper",
+    "bech32PrefixValPub": "likevaloperpub",
+    "bech32PrefixConsAddr": "likevalcons",
+    "bech32PrefixConsPub": "likevalconspub"
+  },
+  "currencies": [
+    {
+      "coinDenom": "LIKE",
+      "coinMinimalDenom": "nanolike",
+      "coinDecimals": 9,
+      "coinGeckoId": "likecoin"
+    }
+  ],
+  "feeCurrencies": [
+    {
+      "coinDenom": "LIKE",
+      "coinMinimalDenom": "nanolike",
+      "coinDecimals": 9,
+      "coinGeckoId": "likecoin",
+      "gasPriceStep": {
+        "low": 1,
+        "average": 10,
+        "high": 1000
+      },
+    }
+  ],
+  "coinType": 118,
+  "features": ["stargate", "ibc-transfer", "no-legacy-stdTx", "ibc-go"]
+}
+
+async function read_likecoin_address_from_keplr() {
+  const { keplr } = window
+  if (keplr == null) {
+    // alert("You need to install Keplr")
+    return
+  }
+
+  await keplr!.experimentalSuggestChain(likecoin_chaininfo)
+  await keplr!.enable(likecoin_chaininfo.chainId)
+
+  const offlineSigner = keplr!.getOfflineSigner(likecoin_chaininfo.chainId)
+  const accounts = await offlineSigner.getAccounts()
+
+  recent_writing_nfts_data_collector_address.value = accounts[0].address
 }
 
 </script>

@@ -75,7 +75,7 @@
           </NButton>
         </section>
       </section>
-      <p class="mt-4">
+      <p class="mt-4 break-all">
         {{ props.nft_class.description }}
       </p>
       <p class="mt-4" v-if="!class_metadata_loading && class_metadata_error == null">

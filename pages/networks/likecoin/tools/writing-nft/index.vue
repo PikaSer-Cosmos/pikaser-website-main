@@ -244,7 +244,6 @@ useHead({
 
 
 const recent_writing_nfts_data_pagination_limit_options = [
-  25,
   50,
   100,
 ]

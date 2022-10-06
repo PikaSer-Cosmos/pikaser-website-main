@@ -131,6 +131,40 @@
               />
             </div>
           </section>
+          <section
+            v-if="writingNftBlockingCreatorAddressListStore.has_any_address"
+            class="pt-2 border-t-1"
+          >
+            <div class="flex flex-1">
+              <h3 class="inline-flex">
+                {{ t("Blocked Creators") }}
+              </h3>
+              <span
+                class="ml-2"
+              >
+                ({{ writingNftBlockingCreatorAddressListStore.address_list_array.length }})
+              </span>
+              <NSwitch
+                class="ml-2"
+                n="lime6 dark:lime5 sm"
+                :model-value="writing_nft_blocked_creator_list_visible"
+                @update:model-value="(checked) => writing_nft_blocked_creator_list_visible = checked"
+              >
+                {{ t("Toggle") }}
+              </NSwitch>
+            </div>
+            <div
+              v-if="writing_nft_blocked_creator_list_visible"
+              class="mt-2"
+            >
+              <WritingNFTBlockedCreatorEntryBox
+                v-for="creator_address of writingNftBlockingCreatorAddressListStore.address_list_array"
+                :key="creator_address"
+                :creator_address="creator_address"
+                @unblock_creator_address="(address) => writingNftBlockingCreatorAddressListStore.removeOneAddress(address)"
+              />
+            </div>
+          </section>
         </section>
         <section class="mt-2 pt-4 border-t-1">
           <div v-if="recent_writing_nfts_data_loading">
@@ -147,9 +181,11 @@
                 :only_writing_nft_with_complete_data_visible_input="only_writing_nft_with_complete_data_visible_input"
                 :all_bookmarked_creator_addresses="writingNftFollowingCreatorAddressListStore.address_list"
                 :only_writing_nft_from_bookmarked_creator_visible="only_writing_nft_from_bookmarked_creator_visible"
+                :all_blocked_creator_addresses="writingNftBlockingCreatorAddressListStore.address_list"
                 @filter_by_creator_address="(address) => recent_writing_nfts_data_creator_address = address"
                 @bookmark_creator_address="(address) => writingNftFollowingCreatorAddressListStore.addOneAddress(address)"
                 @unbookmark_creator_address="(address) => writingNftFollowingCreatorAddressListStore.removeOneAddress(address)"
+                @block_creator_address="(address) => writingNftBlockingCreatorAddressListStore.addOneAddress(address)"
               />
             </div>
             <div>
@@ -179,8 +215,10 @@ import { ChainInfo } from "@keplr-wallet/types"
 
 import WritingNFTEntryBox from './_WritingNFTEntryBox.vue'
 import WritingNFTBookmarkedCreatorEntryBox from './_WritingNFTBookmarkedCreatorEntryBox.vue'
+import WritingNFTBlockedCreatorEntryBox from './_WritingNFTBlockedCreatorEntryBox.vue'
 import { useWritingNftOptionsStore } from "./composables/writing_nft_options"
 import { useWritingNftFollowingCreatorAddressListStore } from "./composables/writing_nft_following_creator_list"
+import { useWritingNftBlockingCreatorAddressListStore } from "./composables/writing_nft_blocking_creator_list"
 
 
 interface LikeCoinNftClass {
@@ -224,6 +262,7 @@ interface RankingEndpointResponse {
 
 const writingNftOptionsStore = useWritingNftOptionsStore()
 const writingNftFollowingCreatorAddressListStore = useWritingNftFollowingCreatorAddressListStore()
+const writingNftBlockingCreatorAddressListStore = useWritingNftBlockingCreatorAddressListStore()
 
 const I18n = useI18n()
 const { t } = useI18n()
@@ -272,6 +311,16 @@ const only_writing_nft_from_bookmarked_creator_visible = computed(() => {
   if (!only_writing_nft_from_bookmarked_creator_visible_input.value) { return false }
 
   // If no creator bookmarked, disable the feature to avoid having empty list
+  // Which can't be turned off easily
+  return writingNftFollowingCreatorAddressListStore.has_any_address
+})
+
+const writing_nft_blocked_creator_list_visible = ref(false)
+const only_writing_nft_from_blocked_creator_visible_input = ref(false)
+const only_writing_nft_from_blocked_creator_visible = computed(() => {
+  if (!only_writing_nft_from_blocked_creator_visible_input.value) { return false }
+
+  // If no creator blocked, disable the feature to avoid having empty list
   // Which can't be turned off easily
   return writingNftFollowingCreatorAddressListStore.has_any_address
 })
@@ -507,6 +556,7 @@ en:
   Only Show "Complete" NFTs: Only Show "Complete" NFTs
 
   Bookmarked Creators: Bookmarked Creators
+  Blocked Creators: Blocked Creators
   Toggle: Toggle
   Only Show Their Created NFTs: Only Show Their Created NFTs
 
@@ -532,6 +582,7 @@ zh:
   Only Show "Complete" NFTs: 只顯示"完整"的NFT
 
   Bookmarked Creators: NFT 創造者書籤清單
+  Blocked Creators: NFT 創造者封鎖清單
   Toggle: 顯示/隱藏
   Only Show Their Created NFTs: 只顯示他們創造的NFT
 

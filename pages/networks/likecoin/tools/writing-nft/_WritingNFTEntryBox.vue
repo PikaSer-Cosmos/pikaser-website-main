@@ -73,6 +73,14 @@
           >
             {{ t("Unbookmark This Creator") }}
           </NButton>
+          <NButton
+            v-if="creator_bookmarked != null && !creator_blocked"
+            icon="carbon:close-filled"
+            n="red xs"
+            @click="emit('block_creator_address', class_metadata.iscn_owner)"
+          >
+            {{ t("Block This Creator") }}
+          </NButton>
         </section>
       </section>
       <p class="mt-4 break-all">
@@ -100,6 +108,8 @@ const emit = defineEmits<{
 
   (e: 'bookmark_creator_address', address: string): void
   (e: 'unbookmark_creator_address', address: string): void
+
+  (e: 'block_creator_address', address: string): void
 }>()
 
 const I18n = useI18n()
@@ -126,6 +136,10 @@ const props = defineProps({
   },
   only_writing_nft_from_bookmarked_creator_visible: {
     type: Boolean,
+  },
+
+  all_blocked_creator_addresses: {
+    type: Set,
   },
 })
 
@@ -185,6 +199,14 @@ const creator_bookmarked = computed<boolean>(() => {
   return false
 })
 
+const creator_blocked = computed<boolean>(() => {
+  if (class_metadata_valid.value) {
+    return props.all_blocked_creator_addresses.has(class_metadata.value.iscn_owner)
+  }
+
+  return false
+})
+
 const {
   pending:  iscn_owner_data_loading,
   data:     iscn_owner_data,
@@ -207,6 +229,10 @@ const {
 
 const entry_visible = computed<boolean>(() => {
   if (props.only_writing_nft_with_complete_data_visible_input && !class_purchase_data_valid.value) {
+    return false
+  }
+
+  if (creator_blocked.value) {
     return false
   }
 
@@ -264,6 +290,7 @@ en:
   View NFTs by This Creator: View NFTs by This Creator
   Bookmark This Creator: Bookmark This Creator
   Unbookmark This Creator: Unbookmark This Creator
+  Block This Creator: Block This Creator
 
 zh:
   NFT Page on Liker Land: Liker Land上的NFT頁面
@@ -275,4 +302,5 @@ zh:
   View NFTs by This Creator: 只看此創造者的NFT
   Bookmark This Creator: 將此創造者加入書籤清單
   Unbookmark This Creator: 將此創造者踢出書籤清單
+  Block This Creator: 將此創造者加入封鎖清單
 </i18n>

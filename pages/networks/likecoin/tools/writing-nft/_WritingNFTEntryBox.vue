@@ -34,6 +34,24 @@
           <strong v-else>{{ class_purchase_data.metadata.soldCount }}</strong>
         </span>
       </p>
+      <section class="mt-4 vertical-middle space-x-1">
+        <NButton
+          icon="carbon:document-tasks"
+          n="purple xs"
+          @click="writingNftReadClassIdList.addOneClassId(props.nft_class.id)"
+          v-if="entry_is_unread"
+        >
+          {{ t("Mark NFT as Read") }}
+        </NButton>
+        <NButton
+          icon="carbon:document-unknown"
+          n="purple xs"
+          @click="writingNftReadClassIdList.removeOneClassId(props.nft_class.id)"
+          v-else
+        >
+          {{ t("Mark NFT as Unread") }}
+        </NButton>
+      </section>
       <section class="mt-4">
         <p>
           {{ t("ISCN Owner") }}
@@ -102,9 +120,18 @@ import { useI18n } from '#i18n'
 import { useAsyncData } from "#imports"
 import dayjs from 'dayjs'
 
+import { useWritingNftReadClassIdList } from "./composables/writing_nft_read_class_list"
+
+
 interface ClassMetadata {
   iscn_owner: string
 }
+
+
+const writingNftReadClassIdList = useWritingNftReadClassIdList()
+
+const I18n = useI18n()
+const { t } = I18n
 
 const emit = defineEmits<{
   (e: 'filter_by_creator_address', address: string): void
@@ -113,10 +140,10 @@ const emit = defineEmits<{
   (e: 'unbookmark_creator_address', address: string): void
 
   (e: 'block_creator_address', address: string): void
-}>()
 
-const I18n = useI18n()
-const { t } = I18n
+  (e: 'mark_nft_class_as_read', nft_class_id: string): void
+  (e: 'mark_nft_class_as_unread', nft_class_id: string): void
+}>()
 
 const props = defineProps({
   nft_class: {
@@ -145,6 +172,7 @@ const props = defineProps({
     type: Set,
   },
 })
+
 
 const {
   pending: class_purchase_data_loading,
@@ -230,6 +258,10 @@ const {
 )
 
 
+const entry_is_unread = computed<boolean>(() => {
+  return !writingNftReadClassIdList.has_id(props.nft_class.id)
+})
+
 const entry_visible = computed<boolean>(() => {
   if (props.only_writing_nft_with_complete_data_visible_input && !class_purchase_data_valid.value) {
     return false
@@ -290,6 +322,9 @@ en:
   Sold: Sold
   ISCN Owner: ISCN Owner
 
+  Mark NFT as Read: Mark NFT as Read
+  Mark NFT as Unread: Mark NFT as Unread
+
   View NFTs by This Creator: View NFTs by This Creator
   Bookmark This Creator: Bookmark This Creator
   Unbookmark This Creator: Unbookmark This Creator
@@ -301,6 +336,9 @@ zh:
   Current Price: 現時價格
   Sold: 已賣出
   ISCN Owner: ISCN 擁有者
+
+  Mark NFT as Read: 將此NFT標記為已讀
+  Mark NFT as Unread: 將此NFT標記為未讀
 
   View NFTs by This Creator: 只看此創造者的NFT
   Bookmark This Creator: 將此創造者加入書籤清單

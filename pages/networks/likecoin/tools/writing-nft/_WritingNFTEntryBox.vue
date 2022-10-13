@@ -18,18 +18,21 @@
         </a>
       </p>
       <p class="mt-4">
-        {{ t("Current Price") }}
+        <span>
+          {{ t("Current Price") }}
+          <span>: </span>
+          <span v-if="class_purchase_data_loading">...</span>
+          <strong v-else-if="class_purchase_data_error != null">???</strong>
+          <strong v-else>{{ class_purchase_data.price }} $LIKE</strong>
+        </span>
         <span> - </span>
-        <span v-if="class_purchase_data_loading">...</span>
-        <strong v-else-if="class_purchase_data_error != null">???</strong>
-        <strong v-else>{{ class_purchase_data.price }} $LIKE</strong>
-      </p>
-      <p class="mt-4">
-        {{ t("Sold") }}
-        <span> - </span>
-        <span v-if="class_purchase_data_loading">...</span>
-        <strong v-else-if="class_purchase_data_error != null">???</strong>
-        <strong v-else>{{ class_purchase_data.metadata.soldCount }}</strong>
+        <span>
+          {{ t("Sold") }}
+          <span>: </span>
+          <span v-if="class_purchase_data_loading">...</span>
+          <strong v-else-if="class_purchase_data_error != null">???</strong>
+          <strong v-else>{{ class_purchase_data.metadata.soldCount }}</strong>
+        </span>
       </p>
       <section class="mt-4">
         <p>

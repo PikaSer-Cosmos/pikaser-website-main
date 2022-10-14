@@ -87,6 +87,23 @@
             >
               {{ t(`Only Show "Complete" NFTs`) }}
             </NSwitch>
+            <section>
+              <label for="read_writing_nft_class_display_style_input">
+                {{ t("Read NFTs Display Style") }}:
+              </label>
+              <select
+                v-model="writingNftOptionsStore.read_writing_nft_class_display_style"
+                id="read_writing_nft_class_display_style_input"
+              >
+                <option
+                  v-for="handling_method in ReadWritingNftClassDisplayStyle"
+                  :key="handling_method"
+                  :value="handling_method"
+                >
+                  {{ translate_read_writing_nft_class_display_style_option(handling_method) }}
+                </option>
+              </select>
+            </section>
           </section>
           <section
             v-if="writingNftFollowingCreatorAddressListStore.has_any_address"
@@ -216,7 +233,10 @@ import { ChainInfo } from "@keplr-wallet/types"
 import WritingNFTEntryBox from './_WritingNFTEntryBox.vue'
 import WritingNFTBookmarkedCreatorEntryBox from './_WritingNFTBookmarkedCreatorEntryBox.vue'
 import WritingNFTBlockedCreatorEntryBox from './_WritingNFTBlockedCreatorEntryBox.vue'
-import { useWritingNftOptionsStore } from "./composables/writing_nft_options"
+import {
+  useWritingNftOptionsStore,
+  ReadWritingNftClassDisplayStyle,
+} from "./composables/writing_nft_options"
 import { useWritingNftFollowingCreatorAddressListStore } from "./composables/writing_nft_following_creator_list"
 import { useWritingNftBlockingCreatorAddressListStore } from "./composables/writing_nft_blocking_creator_list"
 
@@ -303,6 +323,19 @@ const only_writing_nft_with_complete_data_visible_input = ref(writingNftOptionsS
 function update_only_writing_nft_with_complete_data_visible_input(val) {
   only_writing_nft_with_complete_data_visible_input.value = val
   writingNftOptionsStore.update_only_writing_nft_with_complete_data_visible(val)
+}
+
+function translate_read_writing_nft_class_display_style_option(val: ReadWritingNftClassDisplayStyle): string {
+  switch (val) {
+    case ReadWritingNftClassDisplayStyle.SAME_AS_UNREAD:
+      return t("read_writing_nft_class_display_style.same_as_unread")
+    case ReadWritingNftClassDisplayStyle.COLLAPSED:
+      return t("read_writing_nft_class_display_style.collapsed")
+    case ReadWritingNftClassDisplayStyle.HIDDEN:
+      return t("read_writing_nft_class_display_style.hidden")
+    default:
+      return val
+  }
 }
 
 const writing_nft_bookmarked_creator_list_visible = ref(false)
@@ -553,7 +586,13 @@ en:
   NFT Creator: NFT Creator
   NFT Collector: NFT Collector
   Clear: Clear
+
   Only Show "Complete" NFTs: Only Show "Complete" NFTs
+  Read NFTs Display Style: Read NFTs Display Style
+  read_writing_nft_class_display_style:
+    same_as_unread: Same as Unread
+    collapsed: Collapsed
+    hidden: Hidden
 
   Bookmarked Creators: Bookmarked Creators
   Blocked Creators: Blocked Creators
@@ -579,7 +618,13 @@ zh:
   NFT Creator: NFT 創造者
   NFT Collector: NFT 收藏者
   Clear: 清除
+
   Only Show "Complete" NFTs: 只顯示"完整"的NFT
+  Read NFTs Display Style: 已讀NFT顯示方式
+  read_writing_nft_class_display_style:
+    same_as_unread: 與未讀的相同
+    collapsed: 縮小
+    hidden: 隱藏
 
   Bookmarked Creators: NFT 創造者書籤清單
   Blocked Creators: NFT 創造者封鎖清單

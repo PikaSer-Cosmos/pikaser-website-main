@@ -6,41 +6,64 @@
           {{ props.nft_class.metadata.name || props.nft_class.name.replace("Writing NFT - ", "") }}
         </a>
       </h3>
-      <p class="mt-4">
-        <a :href="`https://liker.land/nft/class/${props.nft_class.id}`" target="_blank" rel="noreferrer noopener">
-          {{ t("NFT Page on Liker Land") }}
-        </a>
-        <span> - </span>
-        <span>{{ dayjs(props.nft_class.created_at).format("YYYY-MM-DD HH:mm:ss") }}</span>
-        <span> - </span>
-        <a :href="`https://app.like.co/view/${encodeURIComponent(props.nft_class.parent.iscn_id_prefix)}`" target="_blank" rel="noreferrer noopener">
-          {{ t("On-Chain Data") }}
-        </a>
-      </p>
-      <p class="mt-4">
-        <span>
-          {{ t("Current Price") }}
-          <span>: </span>
-          <span v-if="class_purchase_data_loading">...</span>
-          <strong v-else-if="class_purchase_data_error != null">???</strong>
-          <strong v-else>{{ class_purchase_data.price }} $LIKE</strong>
-        </span>
-        <span> - </span>
-        <span>
-          {{ t("Sold") }}
-          <span>: </span>
-          <span v-if="class_purchase_data_loading">...</span>
-          <strong v-else-if="class_purchase_data_error != null">???</strong>
-          <strong v-else>{{ class_purchase_data.metadata.soldCount }}</strong>
-        </span>
-      </p>
-      <section class="mt-4">
-        <p>
-          {{ t("ISCN Owner") }}
+      <section class="mt-4 vertical-middle space-x-1">
+        <NButton
+          icon="carbon:document-tasks"
+          n="purple xs"
+          @click="writingNftReadClassIdList.addOneClassId(props.nft_class.id)"
+          v-if="entry_is_unread"
+        >
+          {{ t("Mark NFT as Read") }}
+        </NButton>
+        <NButton
+          icon="carbon:document-unknown"
+          n="purple xs"
+          @click="writingNftReadClassIdList.removeOneClassId(props.nft_class.id)"
+          v-else
+        >
+          {{ t("Mark NFT as Unread") }}
+        </NButton>
+      </section>
+      <section
+        v-if="entry_displayed_as_collapsed"
+      >
+        <section class="mt-4">
+          <a :href="`https://liker.land/nft/class/${props.nft_class.id}`" target="_blank" rel="noreferrer noopener">
+            {{ t("NFT Page on Liker Land") }}
+          </a>
           <span> - </span>
-          <span v-if="class_metadata_loading">...</span>
-          <strong v-else-if="class_metadata_error != null">???</strong>
-          <span v-else>
+          <span>{{ dayjs(props.nft_class.created_at).format("YYYY-MM-DD HH:mm:ss") }}</span>
+          <span> - </span>
+          <a :href="`https://app.like.co/view/${encodeURIComponent(props.nft_class.parent.iscn_id_prefix)}`" target="_blank" rel="noreferrer noopener">
+            {{ t("On-Chain Data") }}
+          </a>
+        </section>
+        <section class="mt-4">
+          <span>
+            {{ t("Current Price") }}
+            <span>: </span>
+            <span v-if="class_purchase_data_loading">...</span>
+            <strong v-else-if="class_purchase_data_error != null">???</strong>
+            <strong v-else>{{ class_purchase_data.price }} $LIKE</strong>
+          </span>
+            <span> - </span>
+            <span>
+            {{ t("Sold") }}
+            <span>: </span>
+            <span v-if="class_purchase_data_loading">...</span>
+            <strong v-else-if="class_purchase_data_error != null">???</strong>
+            <strong v-else>{{ class_purchase_data.metadata.soldCount }}</strong>
+          </span>
+        </section>
+        <section
+          class="mt-4"
+        >
+          <p>
+            {{ t("ISCN Owner") }}
+            <span> - </span>
+            <span v-if="class_metadata_loading">...</span>
+            <strong v-else-if="class_metadata_error != null">???</strong>
+            <span v-else>
             <a :href="`https://liker.land/${class_metadata.iscn_owner}`" target="_blank" rel="noreferrer noopener">
               <strong>{{ class_metadata.iscn_owner }}</strong>
               <span v-if="!iscn_owner_data_loading && iscn_owner_data != null">
@@ -48,50 +71,51 @@
               </span>
             </a>
           </span>
-        </p>
-        <section
-          v-if="class_metadata_valid"
-          class="mt-4 vertical-middle space-x-1"
-        >
-          <NButton
-            icon="carbon:filter"
-            n="green xs"
-            @click="emit('filter_by_creator_address', class_metadata.iscn_owner)"
+          </p>
+          <section
+            v-if="class_metadata_valid"
+            class="mt-4 vertical-middle space-x-1"
           >
-            {{ t("View NFTs by This Creator") }}
-          </NButton>
-          <NButton
-            v-if="creator_bookmarked != null && !creator_bookmarked"
-            icon="carbon:bookmark-add"
-            n="green xs"
-            @click="emit('bookmark_creator_address', class_metadata.iscn_owner)"
-          >
-            {{ t("Bookmark This Creator") }}
-          </NButton>
-          <NButton
-            v-if="creator_bookmarked != null && creator_bookmarked"
-            icon="carbon:trash-can"
-            n="red xs"
-            @click="emit('unbookmark_creator_address', class_metadata.iscn_owner)"
-          >
-            {{ t("Unbookmark This Creator") }}
-          </NButton>
-          <NButton
-            v-if="creator_bookmarked != null && !creator_blocked"
-            icon="carbon:close-filled"
-            n="red xs"
-            @click="emit('block_creator_address', class_metadata.iscn_owner)"
-          >
-            {{ t("Block This Creator") }}
-          </NButton>
+            <NButton
+              icon="carbon:filter"
+              n="green xs"
+              @click="emit('filter_by_creator_address', class_metadata.iscn_owner)"
+            >
+              {{ t("View NFTs by This Creator") }}
+            </NButton>
+            <NButton
+              v-if="creator_bookmarked != null && !creator_bookmarked"
+              icon="carbon:bookmark-add"
+              n="green xs"
+              @click="emit('bookmark_creator_address', class_metadata.iscn_owner)"
+            >
+              {{ t("Bookmark This Creator") }}
+            </NButton>
+            <NButton
+              v-if="creator_bookmarked != null && creator_bookmarked"
+              icon="carbon:trash-can"
+              n="red xs"
+              @click="emit('unbookmark_creator_address', class_metadata.iscn_owner)"
+            >
+              {{ t("Unbookmark This Creator") }}
+            </NButton>
+            <NButton
+              v-if="creator_bookmarked != null && !creator_blocked"
+              icon="carbon:close-filled"
+              n="red xs"
+              @click="emit('block_creator_address', class_metadata.iscn_owner)"
+            >
+              {{ t("Block This Creator") }}
+            </NButton>
+          </section>
+        </section>
+        <section class="mt-4 break-all">
+          {{ props.nft_class.description }}
+        </section>
+        <section class="mt-4" v-if="!class_metadata_loading && class_metadata_error == null">
+          <img :src="class_metadata.image" loading="lazy" />
         </section>
       </section>
-      <p class="mt-4 break-all">
-        {{ props.nft_class.description }}
-      </p>
-      <p class="mt-4" v-if="!class_metadata_loading && class_metadata_error == null">
-        <img :src="class_metadata.image" loading="lazy" />
-      </p>
     </div>
   </article>
 </template>
@@ -102,9 +126,23 @@ import { useI18n } from '#i18n'
 import { useAsyncData } from "#imports"
 import dayjs from 'dayjs'
 
+import { useWritingNftReadClassIdList } from "./composables/writing_nft_read_class_list"
+import {
+  useWritingNftOptionsStore,
+  ReadWritingNftClassDisplayStyle,
+} from "./composables/writing_nft_options"
+
+
 interface ClassMetadata {
   iscn_owner: string
 }
+
+
+const writingNftReadClassIdList = useWritingNftReadClassIdList()
+const writingNftOptionsStore = useWritingNftOptionsStore()
+
+const I18n = useI18n()
+const { t } = I18n
 
 const emit = defineEmits<{
   (e: 'filter_by_creator_address', address: string): void
@@ -113,10 +151,10 @@ const emit = defineEmits<{
   (e: 'unbookmark_creator_address', address: string): void
 
   (e: 'block_creator_address', address: string): void
-}>()
 
-const I18n = useI18n()
-const { t } = I18n
+  (e: 'mark_nft_class_as_read', nft_class_id: string): void
+  (e: 'mark_nft_class_as_unread', nft_class_id: string): void
+}>()
 
 const props = defineProps({
   nft_class: {
@@ -145,6 +183,7 @@ const props = defineProps({
     type: Set,
   },
 })
+
 
 const {
   pending: class_purchase_data_loading,
@@ -230,7 +269,26 @@ const {
 )
 
 
+const entry_is_unread = computed<boolean>(() => {
+  return !writingNftReadClassIdList.has_id(props.nft_class.id)
+})
+const entry_is_read = computed<boolean>(() => {
+  return !entry_is_unread.value
+})
+
+const entry_displayed_as_collapsed = computed<boolean>(() => {
+  if (writingNftOptionsStore.read_writing_nft_class_display_style !== ReadWritingNftClassDisplayStyle.COLLAPSED) {
+    return true
+  }
+
+  return entry_is_unread.value
+})
+
 const entry_visible = computed<boolean>(() => {
+  if (writingNftOptionsStore.read_writing_nft_class_display_style === ReadWritingNftClassDisplayStyle.HIDDEN && entry_is_read.value) {
+    return false
+  }
+
   if (props.only_writing_nft_with_complete_data_visible_input && !class_purchase_data_valid.value) {
     return false
   }
@@ -290,6 +348,9 @@ en:
   Sold: Sold
   ISCN Owner: ISCN Owner
 
+  Mark NFT as Read: Mark NFT as Read
+  Mark NFT as Unread: Mark NFT as Unread
+
   View NFTs by This Creator: View NFTs by This Creator
   Bookmark This Creator: Bookmark This Creator
   Unbookmark This Creator: Unbookmark This Creator
@@ -301,6 +362,9 @@ zh:
   Current Price: 現時價格
   Sold: 已賣出
   ISCN Owner: ISCN 擁有者
+
+  Mark NFT as Read: 將此NFT標記為已讀
+  Mark NFT as Unread: 將此NFT標記為未讀
 
   View NFTs by This Creator: 只看此創造者的NFT
   Bookmark This Creator: 將此創造者加入書籤清單

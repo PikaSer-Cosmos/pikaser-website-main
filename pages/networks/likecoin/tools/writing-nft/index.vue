@@ -7,7 +7,7 @@
       <section>
         <h2 class="text-xl font-semibold mb-4">{{ t("Recent Writing NFTs") }}</h2>
         <section class="mt-4 space-y-2">
-          <section>
+          <section v-if="recent_writing_nfts_data_pagination_limit_options.length > 1">
             <label for="recent_writing_nfts_data_pagination_limit_select">
               {{ t("Display at most") }}:
             </label>
@@ -303,7 +303,7 @@ useHead({
 
 
 const recent_writing_nfts_data_pagination_limit_options = [
-  50,
+  // 50,
   100,
 ]
 const recent_writing_nfts_data_pagination_limit = ref(recent_writing_nfts_data_pagination_limit_options[0])

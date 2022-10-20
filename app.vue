@@ -27,8 +27,6 @@ useHead({
   titleTemplate: (titleChunk) => {
     return titleChunk ? `${titleChunk} - ${t("meta.title")}` : t("meta.title");
   },
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
-  charset:  'utf-8',
   meta: [
     { name: 'description', content: t("meta.description") }
   ],

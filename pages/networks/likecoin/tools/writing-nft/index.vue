@@ -190,6 +190,17 @@
             </p>
           </div>
           <div v-else>
+            <div class="mb-4">
+              <NButton
+                class="w-full text-center"
+                :disabled="!load_more_button_enabled"
+                :icon="more_nft_being_loaded ? 'carbon:time' : 'carbon:renew'"
+                n="green"
+                @click="reload_recent_writing_nfts_data()"
+              >
+                {{ t("Refresh") }}
+              </NButton>
+            </div>
             <div class="divide-y">
               <WritingNFTEntryBox
                 v-for="nft_class of all_recent_writing_nft_class_entries"
@@ -359,6 +370,11 @@ const only_writing_nft_from_blocked_creator_visible = computed(() => {
 })
 
 
+// Update this to load data again
+const last_initial_recent_writing_nfts_data_loading_started_at = ref(dayjs().unix())
+function reload_recent_writing_nfts_data() {
+  last_initial_recent_writing_nfts_data_loading_started_at.value = dayjs().unix()
+}
 let last_used_earliest_time_in_unix_time = null
 
 const {
@@ -392,6 +408,7 @@ const {
       recent_writing_nfts_data_time_limit_in_days,
       recent_writing_nfts_data_creator_address,
       recent_writing_nfts_data_collector_address,
+      last_initial_recent_writing_nfts_data_loading_started_at,
     ],
     default: (): LikeCoinNftClassModified[] => {
       return []
@@ -600,6 +617,7 @@ en:
   Only Show Their Created NFTs: Only Show Their Created NFTs
 
   Loading...: Loading...
+  Refresh: Refresh
 
   Is There More～: Is There More～
   Before Time: Before {time}
@@ -632,6 +650,7 @@ zh:
   Only Show Their Created NFTs: 只顯示他們創造的NFT
 
   Loading...: 蕉蕉發電中…
+  Refresh: 重新發電
 
   Is There More～: 還有更多嗎～
   Before Time: 在 {time} 以前

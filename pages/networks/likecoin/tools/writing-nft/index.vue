@@ -320,12 +320,13 @@ const recent_writing_nfts_data_pagination_limit_options = [
 const recent_writing_nfts_data_pagination_limit = ref(recent_writing_nfts_data_pagination_limit_options[0])
 
 const recent_writing_nfts_data_time_limit_in_days_options = [
+  3,
   7,
   14,
   21,
   28,
 ]
-const recent_writing_nfts_data_time_limit_in_days = ref(recent_writing_nfts_data_time_limit_in_days_options[0])
+const recent_writing_nfts_data_time_limit_in_days = ref(7)
 
 const recent_writing_nfts_data_creator_address = ref('')
 const recent_writing_nfts_data_collector_address = ref('')

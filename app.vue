@@ -47,8 +47,9 @@ watch(
 )
 
 // Force dark mode
-const colorMode = useColorMode()
-colorMode.preference = "dark"
+definePageMeta({
+  colorMode: "dark",
+})
 </script>
 
 <i18n lang="yaml">

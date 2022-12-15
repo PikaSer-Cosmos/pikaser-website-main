@@ -1,8 +1,9 @@
-import { defineNuxtConfig } from "nuxt"
+import { defineNuxtConfig } from "nuxt/config"
 
-// https://v3.nuxtjs.org/api/configuration/nuxt.config
+// https://nuxt.com/docs/guide/directory-structure/nuxt.config
 export default defineNuxtConfig({
   modules: [
+    "@nuxtjs/color-mode",
     "@nuxt/content",
     "@nuxtjs/i18n",
     "@nuxt/ui",
@@ -17,6 +18,9 @@ export default defineNuxtConfig({
   colorMode: {
     preference: "dark",
     fallback:   "dark",
+
+    // default is "-mode"
+    classSuffix: "",
   },
 
   content: {

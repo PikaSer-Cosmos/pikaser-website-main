@@ -432,7 +432,7 @@ const all_recent_writing_nft_class_entries = ref(recent_writing_nft_class_entrie
 const earliest_writing_nft_created_at_in_unix = computed(() => {
   return all_recent_writing_nft_class_entries.value.at(-1).created_at_in_unix
 })
-const earliest_writing_nft_created_at_limit_searched_in_unix = ref(Date.now())
+const earliest_writing_nft_created_at_limit_searched_in_unix = ref(dayjs().unix())
 const more_nft_being_loaded = ref(false)
 
 const load_more_button_enabled = ref(true)

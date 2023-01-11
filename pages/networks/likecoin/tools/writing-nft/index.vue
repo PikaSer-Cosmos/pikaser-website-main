@@ -395,10 +395,13 @@ const {
       "https://mainnet-node.like.co/likechain/likenft/v1/ranking",
       {
         params: {
-          after:      earliest_time_in_unix_time,
-          limit:      recent_writing_nfts_data_pagination_limit.value,
-          creator:    recent_writing_nfts_data_creator_address.value,
-          collector:  recent_writing_nfts_data_collector_address.value,
+          // Not `after`, doc outdated
+          // `created_after` asked from Discord
+          // Introduced in https://github.com/likecoin/likecoin-chain-tx-indexer/commit/457a0550efe44652a51f6912f0a6fa83faf11895
+          created_after:  earliest_time_in_unix_time,
+          limit:          recent_writing_nfts_data_pagination_limit.value,
+          creator:        recent_writing_nfts_data_creator_address.value,
+          collector:      recent_writing_nfts_data_collector_address.value,
         },
       }
     )

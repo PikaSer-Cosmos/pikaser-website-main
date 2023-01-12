@@ -390,7 +390,7 @@ const {
       dayjs().subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days').unix()
     last_used_earliest_time_in_unix_time = earliest_time_in_unix_time
 
-    // https://docs.like.co/developer/likenft/api-reference
+    // https://docs.like.co/developer/likenft/api-reference#ranking-api
     return $fetch<unknown>(
       "https://mainnet-node.like.co/likechain/likenft/v1/ranking",
       {
@@ -468,15 +468,19 @@ function load_more_recent_writing_nft_class_entries() {
     .unix()
   last_used_earliest_time_in_unix_time = earliest_time_in_unix_time
 
+  // https://docs.like.co/developer/likenft/api-reference#ranking-api
   $fetch<RankingEndpointResponse>(
     "https://mainnet-node.like.co/likechain/likenft/v1/ranking",
     {
       params: {
-        before:     earliest_writing_nft_created_at_limit_searched_in_unix.value,
-        after:      earliest_time_in_unix_time,
-        limit:      recent_writing_nfts_data_pagination_limit.value,
-        creator:    recent_writing_nfts_data_creator_address.value,
-        collector:  recent_writing_nfts_data_collector_address.value,
+        // Not `after`, doc outdated
+        // `created_after` asked from Discord
+        // Introduced in https://github.com/likecoin/likecoin-chain-tx-indexer/commit/457a0550efe44652a51f6912f0a6fa83faf11895
+        created_before:   earliest_writing_nft_created_at_limit_searched_in_unix.value,
+        created_after:    earliest_time_in_unix_time,
+        limit:            recent_writing_nfts_data_pagination_limit.value,
+        creator:          recent_writing_nfts_data_creator_address.value,
+        collector:        recent_writing_nfts_data_collector_address.value,
       },
     }
   )

@@ -154,6 +154,9 @@ const emit = defineEmits<{
 
   (e: 'mark_nft_class_as_read', nft_class_id: string): void
   (e: 'mark_nft_class_as_unread', nft_class_id: string): void
+
+  (e: 'hide_for_blocked_creator_address', nft_class_id: string): void
+  (e: 'show_for_blocked_creator_address', nft_class_id: string): void
 }>()
 
 const props = defineProps({
@@ -294,7 +297,11 @@ const entry_visible = computed<boolean>(() => {
   }
 
   if (creator_blocked.value) {
+    emit('hide_for_blocked_creator_address', props.nft_class.id)
     return false
+  }
+  else {
+    emit('show_for_blocked_creator_address', props.nft_class.id)
   }
 
   if (props.only_writing_nft_from_bookmarked_creator_visible) {

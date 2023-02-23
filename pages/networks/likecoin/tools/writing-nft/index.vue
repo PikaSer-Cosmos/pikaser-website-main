@@ -224,6 +224,8 @@
                 @bookmark_creator_address="(address) => writingNftFollowingCreatorAddressListStore.addOneAddress(address)"
                 @unbookmark_creator_address="(address) => writingNftFollowingCreatorAddressListStore.removeOneAddress(address)"
                 @block_creator_address="(address) => writingNftBlockingCreatorAddressListStore.addOneAddress(address)"
+                @hide_for_blocked_creator_address="(class_id) => all_invisible_writing_nft_class_ids.add(class_id)"
+                @show_for_blocked_creator_address="(class_id) => all_invisible_writing_nft_class_ids.delete(class_id)"
               />
             </div>
             <div>
@@ -445,8 +447,14 @@ const earliest_writing_nft_created_at_in_unix = computed(() => {
 const earliest_writing_nft_created_at_limit_searched_in_unix = ref(dayjs().unix())
 const more_nft_being_loaded = ref(false)
 const all_recent_writing_nft_class_ids = computed(() => all_recent_writing_nft_class_entries.value.map((c) => c.id))
+const all_invisible_writing_nft_class_ids = ref(new Set())
 const unread_writing_nft_diff = computed(() => {
-  return all_recent_writing_nft_class_ids.value.filter(n => !writingNftReadClassIdList.has_id(n))
+  return all_recent_writing_nft_class_ids.value.filter((class_id) => {
+    if (writingNftReadClassIdList.has_id(class_id)) { return false }
+    if (all_invisible_writing_nft_class_ids.value.has(class_id)) { return false }
+
+    return true
+  })
 })
 const unread_writing_nft_count = computed(() => unread_writing_nft_diff.value.length)
 

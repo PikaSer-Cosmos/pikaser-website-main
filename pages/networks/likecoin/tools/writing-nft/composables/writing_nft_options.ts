@@ -15,14 +15,21 @@ export const useWritingNftOptionsStore = defineStore("likecoin_writing_nft_optio
         false,
       ),
       read_writing_nft_class_display_style: useLocalStorage(
-      "likecoin_writing_nft_options__read_writing_nft_class_display_style",
-      ReadWritingNftClassDisplayStyle.SAME_AS_UNREAD,
+        "likecoin_writing_nft_options__read_writing_nft_class_display_style",
+        ReadWritingNftClassDisplayStyle.SAME_AS_UNREAD,
+      ),
+      show_unread_writing_nft_count_on_title: useLocalStorage(
+        "show_unread_writing_nft_count_on_title",
+        false,
       ),
     }
   }),
   actions: {
     update_only_writing_nft_with_complete_data_visible(val: boolean) {
       this.only_writing_nft_with_complete_data_visible = val
+    },
+    update_show_unread_writing_nft_count_on_title(val: boolean) {
+      this.show_unread_writing_nft_count_on_title = val
     },
   },
 })

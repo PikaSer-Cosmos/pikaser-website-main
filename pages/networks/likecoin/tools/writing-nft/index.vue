@@ -80,13 +80,23 @@
             </NButton>
           </section>
           <section>
-            <NSwitch
-              n="lime6 dark:lime5 sm"
-              :model-value="only_writing_nft_with_complete_data_visible_input"
-              @update:model-value="(checked) => update_only_writing_nft_with_complete_data_visible_input(checked)"
-            >
-              {{ t(`Only Show "Complete" NFTs`) }}
-            </NSwitch>
+            <section>
+              <NSwitch
+                n="lime6 dark:lime5 sm"
+                :model-value="only_writing_nft_with_complete_data_visible_input"
+                @update:model-value="(checked) => update_only_writing_nft_with_complete_data_visible_input(checked)"
+              >
+                {{ t(`Only Show "Complete" NFTs`) }}
+              </NSwitch>
+              <NSwitch
+                class="ml-2"
+                n="lime6 dark:lime5 sm"
+                :model-value="show_unread_writing_nft_count_on_title"
+                @update:model-value="(checked) => update_show_unread_writing_nft_count_on_title(checked)"
+              >
+                {{ t("Show Unread Writing NFT Count On Title") }}
+              </NSwitch>
+            </section>
             <section>
               <label for="read_writing_nft_class_display_style_input">
                 {{ t("Read NFTs Display Style") }}:
@@ -250,6 +260,7 @@ import {
 } from "./composables/writing_nft_options"
 import { useWritingNftFollowingCreatorAddressListStore } from "./composables/writing_nft_following_creator_list"
 import { useWritingNftBlockingCreatorAddressListStore } from "./composables/writing_nft_blocking_creator_list"
+import { useWritingNftReadClassIdList } from "./composables/writing_nft_read_class_list"
 
 
 interface LikeCoinNftClass {
@@ -294,23 +305,13 @@ interface RankingEndpointResponse {
 const writingNftOptionsStore = useWritingNftOptionsStore()
 const writingNftFollowingCreatorAddressListStore = useWritingNftFollowingCreatorAddressListStore()
 const writingNftBlockingCreatorAddressListStore = useWritingNftBlockingCreatorAddressListStore()
+const writingNftReadClassIdList = useWritingNftReadClassIdList()
 
 const I18n = useI18n()
 const { t } = useI18n()
 
 // RPC from https://github.com/likecoin/mainnet
 // const likecoin_stargate_client = await StargateClient.connect("https://mainnet-node-rpc.like.co/")
-
-
-useHead({
-  title:  t("meta.title"),
-  meta:   [
-    {
-      name: 'description',
-      content: t("meta.title"),
-    },
-  ]
-})
 
 
 const recent_writing_nfts_data_pagination_limit_options = [
@@ -335,6 +336,12 @@ const only_writing_nft_with_complete_data_visible_input = ref(writingNftOptionsS
 function update_only_writing_nft_with_complete_data_visible_input(val) {
   only_writing_nft_with_complete_data_visible_input.value = val
   writingNftOptionsStore.update_only_writing_nft_with_complete_data_visible(val)
+}
+
+const show_unread_writing_nft_count_on_title = ref(writingNftOptionsStore.show_unread_writing_nft_count_on_title)
+function update_show_unread_writing_nft_count_on_title(val) {
+  show_unread_writing_nft_count_on_title.value = val
+  writingNftOptionsStore.update_show_unread_writing_nft_count_on_title(val)
 }
 
 function translate_read_writing_nft_class_display_style_option(val: ReadWritingNftClassDisplayStyle): string {
@@ -437,6 +444,11 @@ const earliest_writing_nft_created_at_in_unix = computed(() => {
 })
 const earliest_writing_nft_created_at_limit_searched_in_unix = ref(dayjs().unix())
 const more_nft_being_loaded = ref(false)
+const all_recent_writing_nft_class_ids = computed(() => all_recent_writing_nft_class_entries.value.map((c) => c.id))
+const unread_writing_nft_diff = computed(() => {
+  return all_recent_writing_nft_class_ids.value.filter(n => !writingNftReadClassIdList.has_id(n))
+})
+const unread_writing_nft_count = computed(() => unread_writing_nft_diff.value.length)
 
 const load_more_button_enabled = ref(true)
 const load_more_button_text = computed(() => {
@@ -577,6 +589,26 @@ async function read_likecoin_address_from_keplr() {
   recent_writing_nfts_data_collector_address.value = accounts[0].address
 }
 
+
+
+useHead({
+  title:  computed(() => {
+    const title = t("meta.title")
+
+    if (!show_unread_writing_nft_count_on_title.value || unread_writing_nft_count.value === 0) {
+      return title
+    }
+
+    return `(${unread_writing_nft_count.value}) ${title}`
+  }),
+  meta:   [
+    {
+      name: 'description',
+      content: t("meta.title"),
+    },
+  ],
+})
+
 </script>
 
 <style lang="scss">
@@ -613,6 +645,7 @@ en:
   Clear: Clear
 
   Only Show "Complete" NFTs: Only Show "Complete" NFTs
+  Show Unread Writing NFT Count On Title: Show Unread Writing NFT Count On Title
   Read NFTs Display Style: Read NFTs Display Style
   read_writing_nft_class_display_style:
     same_as_unread: Same as Unread
@@ -646,6 +679,7 @@ zh:
   Clear: 清除
 
   Only Show "Complete" NFTs: 只顯示"完整"的NFT
+  Show Unread Writing NFT Count On Title: 在標題上顯示未讀NFT數量
   Read NFTs Display Style: 已讀NFT顯示方式
   read_writing_nft_class_display_style:
     same_as_unread: 與未讀的相同

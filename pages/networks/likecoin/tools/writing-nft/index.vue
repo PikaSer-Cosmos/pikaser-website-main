@@ -441,9 +441,6 @@ const {
 )
 
 const all_recent_writing_nft_class_entries = ref(recent_writing_nft_class_entries)
-const earliest_writing_nft_created_at_in_unix = computed(() => {
-  return all_recent_writing_nft_class_entries.value.at(-1).created_at_in_unix
-})
 const earliest_writing_nft_created_at_limit_searched_in_unix = ref(dayjs().unix())
 const more_nft_being_loaded = ref(false)
 const all_recent_writing_nft_class_ids = computed(() => all_recent_writing_nft_class_entries.value.map((c) => c.id))

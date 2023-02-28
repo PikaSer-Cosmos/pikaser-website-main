@@ -116,6 +116,63 @@
             </section>
           </section>
           <section
+            class="pt-2 border-t-1"
+          >
+            <div class="leading-1.2em tracking-wide op50">
+              {{ t("Auto Refresh.Auto Refresh Interval") }}
+            </div>
+            <div class="mt-1 flex gap-3 items-center">
+              <NRadio
+                v-model="auto_refresh_interval_in_seconds_input"
+                n="lime6 dark:lime5 sm"
+                value=0
+                selected
+              >
+                {{ t("Auto Refresh.Disabled") }}
+              </NRadio>
+              <NRadio
+                v-model="auto_refresh_interval_in_seconds_input"
+                n="lime6 dark:lime5 sm"
+                class="ml"
+                value=3600
+              >
+                {{ t("Auto Refresh.1 Hour") }}
+              </NRadio>
+              <NRadio
+                v-model="auto_refresh_interval_in_seconds_input"
+                n="lime6 dark:lime5 sm"
+                class="ml"
+                :value="(3600 * 3).toString()"
+              >
+                {{ t("Auto Refresh.3 Hours") }}
+              </NRadio>
+              <NRadio
+                v-model="auto_refresh_interval_in_seconds_input"
+                n="lime6 dark:lime5 sm"
+                class="ml"
+                :value="(3600 * 6).toString()"
+              >
+                {{ t("Auto Refresh.6 Hours") }}
+              </NRadio>
+              <NRadio
+                v-model="auto_refresh_interval_in_seconds_input"
+                n="lime6 dark:lime5 sm"
+                class="ml"
+                :value="(3600 * 12).toString()"
+              >
+                {{ t("Auto Refresh.12 Hours") }}
+              </NRadio>
+              <NRadio
+                v-model="auto_refresh_interval_in_seconds_input"
+                n="lime6 dark:lime5 sm"
+                class="ml"
+                :value="(3600 * 24).toString()"
+              >
+                {{ t("Auto Refresh.24 Hours") }}
+              </NRadio>
+            </div>
+          </section>
+          <section
             v-if="writingNftFollowingCreatorAddressListStore.has_any_address"
             class="pt-2 border-t-1"
           >
@@ -359,6 +416,37 @@ function translate_read_writing_nft_class_display_style_option(val: ReadWritingN
   }
 }
 
+// region auto refresh
+
+// 0 = disabled
+const auto_refresh_interval_in_seconds_input = ref<String>("0")
+const auto_refresh_interval_in_seconds_as_integer = computed<Number>(() => {
+  const parsed_int = parseInt(auto_refresh_interval_in_seconds_input.value)
+  // Fail-safe
+  if (isNaN(parsed_int)) { return 0 }
+  return parsed_int
+})
+const auto_refresh_interval_id = ref<Number|null>(null)
+watchEffect(() => {
+  // Clear previous interval first
+  if (auto_refresh_interval_id.value != null) { clearInterval(auto_refresh_interval_id.value) }
+
+  if (auto_refresh_interval_in_seconds_as_integer.value === 0) {
+    // 0 = disabled = nothing else to do
+    return
+  }
+
+  auto_refresh_interval_id.value = window.setInterval(
+    () => reload_recent_writing_nfts_data(),
+    auto_refresh_interval_in_seconds_as_integer.value * 1000
+  )
+})
+function disable_auto_refresh() {
+  auto_refresh_interval_in_seconds_input.value = "0"
+}
+
+// endregion auto refresh
+
 const writing_nft_bookmarked_creator_list_visible = ref(false)
 const only_writing_nft_from_bookmarked_creator_visible_input = ref(false)
 const only_writing_nft_from_bookmarked_creator_visible = computed(() => {
@@ -478,6 +566,9 @@ function load_more_recent_writing_nft_class_entries() {
   // Disable button, but not hide it
   load_more_button_enabled.value = false
   more_nft_being_loaded.value = true
+
+  // Disable auto refresh to avoid unexpected progress loss
+  disable_auto_refresh()
 
   const earliest_time_in_unix_time =
     dayjs.unix(earliest_writing_nft_created_at_limit_searched_in_unix.value)
@@ -657,6 +748,15 @@ en:
     collapsed: Collapsed
     hidden: Hidden
 
+  Auto Refresh:
+    Auto Refresh Interval: Auto Refresh Interval
+    Disabled: Disabled
+    1 Hour: 1 Hour
+    3 Hours: 3 Hours
+    6 Hours: 6 Hours
+    12 Hours: 12 Hours
+    24 Hours: 24 Hours
+
   Bookmarked Creators: Bookmarked Creators
   Blocked Creators: Blocked Creators
   Toggle: Toggle
@@ -690,6 +790,15 @@ zh:
     same_as_unread: 與未讀的相同
     collapsed: 縮小
     hidden: 隱藏
+
+  Auto Refresh:
+    Auto Refresh Interval: 自動刷新間隔
+    Disabled: 停用
+    1 Hour: 1小時
+    3 Hours: 3小時
+    6 Hours: 6小時
+    12 Hours: 12小時
+    24 Hours: 24小時
 
   Bookmarked Creators: NFT 創造者書籤清單
   Blocked Creators: NFT 創造者封鎖清單

@@ -3,7 +3,7 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "lib": [
-      "eS2021",
+      "es2021",
       "dom",
     ],
     "types": [

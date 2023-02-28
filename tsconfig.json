@@ -4,6 +4,7 @@
   "compilerOptions": {
     "lib": [
       "eS2021",
+      "dom",
     ],
     "types": [
       "@nuxt/types",

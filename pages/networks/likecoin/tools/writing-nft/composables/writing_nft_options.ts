@@ -22,6 +22,10 @@ export const useWritingNftOptionsStore = defineStore("likecoin_writing_nft_optio
         "show_unread_writing_nft_count_on_title",
         false,
       ),
+      auto_refresh_interval_in_seconds: useLocalStorage(
+        "auto_refresh_interval_in_seconds",
+        0,
+      ),
     }
   }),
   actions: {
@@ -30,6 +34,9 @@ export const useWritingNftOptionsStore = defineStore("likecoin_writing_nft_optio
     },
     update_show_unread_writing_nft_count_on_title(val: boolean) {
       this.show_unread_writing_nft_count_on_title = val
+    },
+    update_auto_refresh_interval_in_seconds(val: number) {
+      this.auto_refresh_interval_in_seconds = val
     },
   },
 })

@@ -419,14 +419,14 @@ function translate_read_writing_nft_class_display_style_option(val: ReadWritingN
 // region auto refresh
 
 // 0 = disabled
-const auto_refresh_interval_in_seconds_input = ref<String>("0")
-const auto_refresh_interval_in_seconds_as_integer = computed<Number>(() => {
+const auto_refresh_interval_in_seconds_input = ref<String>(writingNftOptionsStore.auto_refresh_interval_in_seconds.toString())
+const auto_refresh_interval_in_seconds_as_integer = computed<number>(() => {
   const parsed_int = parseInt(auto_refresh_interval_in_seconds_input.value)
   // Fail-safe
   if (isNaN(parsed_int)) { return 0 }
   return parsed_int
 })
-const auto_refresh_interval_id = ref<Number|null>(null)
+const auto_refresh_interval_id = ref<number|null>(null)
 watchEffect(reset_auto_refresh_interval)
 function reset_auto_refresh_interval() {
   // Clear previous interval first
@@ -442,6 +442,10 @@ function reset_auto_refresh_interval() {
     auto_refresh_interval_in_seconds_as_integer.value * 1000
   )
 }
+// Save settings
+watchEffect(() => {
+  writingNftOptionsStore.update_auto_refresh_interval_in_seconds(auto_refresh_interval_in_seconds_as_integer.value)
+})
 function disable_auto_refresh() {
   auto_refresh_interval_in_seconds_input.value = "0"
 }

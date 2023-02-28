@@ -263,7 +263,7 @@
                 :disabled="!load_more_button_enabled"
                 :icon="more_nft_being_loaded ? 'carbon:time' : 'carbon:renew'"
                 n="green"
-                @click="reload_recent_writing_nfts_data()"
+                @click="manually_reload_recent_writing_nfts_data()"
               >
                 {{ t("Refresh") }}
               </NButton>
@@ -427,9 +427,10 @@ const auto_refresh_interval_in_seconds_as_integer = computed<Number>(() => {
   return parsed_int
 })
 const auto_refresh_interval_id = ref<Number|null>(null)
-watchEffect(() => {
+watchEffect(reset_auto_refresh_interval)
+function reset_auto_refresh_interval() {
   // Clear previous interval first
-  if (auto_refresh_interval_id.value != null) { clearInterval(auto_refresh_interval_id.value) }
+  if (auto_refresh_interval_id.value != null) { window.clearInterval(auto_refresh_interval_id.value) }
 
   if (auto_refresh_interval_in_seconds_as_integer.value === 0) {
     // 0 = disabled = nothing else to do
@@ -440,9 +441,13 @@ watchEffect(() => {
     () => reload_recent_writing_nfts_data(),
     auto_refresh_interval_in_seconds_as_integer.value * 1000
   )
-})
+}
 function disable_auto_refresh() {
   auto_refresh_interval_in_seconds_input.value = "0"
+}
+function manually_reload_recent_writing_nfts_data() {
+  reset_auto_refresh_interval()
+  reload_recent_writing_nfts_data()
 }
 
 // endregion auto refresh

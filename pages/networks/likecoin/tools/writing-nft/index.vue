@@ -96,6 +96,14 @@
               >
                 {{ t("Show Unread Writing NFT Count On Title") }}
               </NSwitch>
+              <NSwitch
+                class="ml-2"
+                n="lime6 dark:lime5 sm"
+                :model-value="auto_load_more_recent_writing_nft_class_entries_enabled"
+                @update:model-value="(checked) => update_auto_load_more_recent_writing_nft_class_entries_enabled(checked)"
+              >
+                {{ t("Auto Load More Writing NFT") }}
+              </NSwitch>
             </section>
             <section>
               <label for="read_writing_nft_class_display_style_input">
@@ -285,7 +293,7 @@
                 @show_for_blocked_creator_address="(class_id) => all_invisible_writing_nft_class_ids.delete(class_id)"
               />
             </div>
-            <div>
+            <div v-element-in-view="on_load_more_button_visibility_changed">
               <NButton
                 class="w-full text-center"
                 :disabled="!load_more_button_enabled"
@@ -313,6 +321,7 @@ import { ChainInfo } from "@keplr-wallet/types"
 import WritingNFTEntryBox from './_WritingNFTEntryBox.vue'
 import WritingNFTBookmarkedCreatorEntryBox from './_WritingNFTBookmarkedCreatorEntryBox.vue'
 import WritingNFTBlockedCreatorEntryBox from './_WritingNFTBlockedCreatorEntryBox.vue'
+
 import {
   useWritingNftOptionsStore,
   ReadWritingNftClassDisplayStyle,
@@ -552,6 +561,16 @@ const unread_writing_nft_diff = computed(() => {
 })
 const unread_writing_nft_count = computed(() => unread_writing_nft_diff.value.length)
 
+const auto_load_more_recent_writing_nft_class_entries_enabled = ref(writingNftOptionsStore.auto_load_more_recent_writing_nft_class_entries_enabled)
+function update_auto_load_more_recent_writing_nft_class_entries_enabled(val) {
+  auto_load_more_recent_writing_nft_class_entries_enabled.value = val
+  writingNftOptionsStore.update_auto_load_more_recent_writing_nft_class_entries_enabled(val)
+}
+function on_load_more_button_visibility_changed() {
+  if (!auto_load_more_recent_writing_nft_class_entries_enabled.value) { return }
+
+  load_more_recent_writing_nft_class_entries()
+}
 const load_more_button_enabled = ref(true)
 const load_more_button_text = computed(() => {
   if (more_nft_being_loaded.value) {
@@ -572,6 +591,9 @@ const load_more_button_text = computed(() => {
 })
 
 function load_more_recent_writing_nft_class_entries() {
+  // Double loading prevention
+  if (more_nft_being_loaded.value) { return }
+
   // Disable button, but not hide it
   load_more_button_enabled.value = false
   more_nft_being_loaded.value = true
@@ -751,6 +773,7 @@ en:
 
   Only Show "Complete" NFTs: Only Show "Complete" NFTs
   Show Unread Writing NFT Count On Title: Show Unread Writing NFT Count On Title
+  Auto Load More Writing NFT: Auto Load More Writing NFT
   Read NFTs Display Style: Read NFTs Display Style
   read_writing_nft_class_display_style:
     same_as_unread: Same as Unread
@@ -794,6 +817,7 @@ zh:
 
   Only Show "Complete" NFTs: 只顯示"完整"的NFT
   Show Unread Writing NFT Count On Title: 在標題上顯示未讀NFT數量
+  Auto Load More Writing NFT: 自動載入更多NFT
   Read NFTs Display Style: 已讀NFT顯示方式
   read_writing_nft_class_display_style:
     same_as_unread: 與未讀的相同

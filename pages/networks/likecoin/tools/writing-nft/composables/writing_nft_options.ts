@@ -26,6 +26,10 @@ export const useWritingNftOptionsStore = defineStore("likecoin_writing_nft_optio
         "auto_refresh_interval_in_seconds",
         0,
       ),
+      auto_load_more_recent_writing_nft_class_entries_enabled: useLocalStorage(
+        "auto_load_more_recent_writing_nft_class_entries_enabled",
+        false,
+      ),
     }
   }),
   actions: {
@@ -37,6 +41,9 @@ export const useWritingNftOptionsStore = defineStore("likecoin_writing_nft_optio
     },
     update_auto_refresh_interval_in_seconds(val: number) {
       this.auto_refresh_interval_in_seconds = val
+    },
+    update_auto_load_more_recent_writing_nft_class_entries_enabled(val: number) {
+      this.auto_load_more_recent_writing_nft_class_entries_enabled = val
     },
   },
 })

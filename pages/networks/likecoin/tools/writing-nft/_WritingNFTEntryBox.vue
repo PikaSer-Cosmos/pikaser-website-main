@@ -112,8 +112,11 @@
         <section class="mt-4 break-all">
           {{ props.nft_class.description }}
         </section>
-        <section class="mt-4" v-if="!class_metadata_loading && class_metadata_error == null">
-          <img :src="class_metadata.image" loading="lazy" />
+        <section class="mt-4" v-if="class_metadata_image_valid">
+          <img :src="class_metadata_image_url_sometimes_converted" loading="lazy" />
+        </section>
+        <section class="mt-4" v-else>
+          <p>{{ class_metadata.image }}</p>
         </section>
       </section>
     </div>
@@ -235,6 +238,22 @@ const {
   })
 )
 const class_metadata_valid = computed<boolean>(() => !class_metadata_loading.value && class_metadata_error.value == null)
+const class_metadata_image_url_sometimes_converted = computed<String|null>(() => {
+  if (!class_metadata_valid.value) { return null }
+  // HTTP(s) = just use directly
+  if (class_metadata.value.image.startsWith('http')) { return class_metadata.value.image }
+  // Arweave = convert into HTTP
+  if (class_metadata.value.image.startsWith('ar://')) {
+    return class_metadata.value.image.replace('ar://', 'https://arweave.net/')
+  }
+
+  // Cannot handle
+  return null
+})
+const class_metadata_image_valid = computed<boolean>(() => {
+  return class_metadata_image_url_sometimes_converted.value != null
+})
+
 
 const creator_bookmarked = computed<boolean>(() => {
   if (class_metadata_valid.value) {

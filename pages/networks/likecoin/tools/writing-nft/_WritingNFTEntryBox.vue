@@ -2,7 +2,7 @@
   <article class="writing-nft-entry-box" v-if="entry_visible">
     <div class="writing-nft-entry-box__main-content">
       <h3 class="text-lg">
-        <a :href="props.nft_class.metadata.external_url || `https://liker.land/nft/class/${props.nft_class.id}`" target="_blank" rel="noreferrer noopener">
+        <a :href="class_external_url" target="_blank" rel="noreferrer noopener">
           {{ props.nft_class.metadata.name || props.nft_class.name.replace("Writing NFT - ", "") }}
         </a>
       </h3>
@@ -328,6 +328,15 @@ const entry_visible = computed<boolean>(() => {
   }
 
   return true
+})
+
+const class_external_url = computed<string>(() => {
+  const external_url_from_metadata = props.nft_class.metadata.external_url
+  if (typeof external_url_from_metadata === 'string' && external_url_from_metadata.startsWith('http')) {
+    return external_url_from_metadata
+  }
+
+  return `https://liker.land/nft/class/${props.nft_class.id}`
 })
 
 </script>

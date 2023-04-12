@@ -311,7 +311,7 @@ const entry_visible = computed<boolean>(() => {
     return false
   }
 
-  if (props.only_writing_nft_with_complete_data_visible_input && !class_purchase_data_valid.value) {
+  if (props.only_writing_nft_with_complete_data_visible_input && ( !class_purchase_data_valid.value || !class_metadata_valid.value )) {
     return false
   }
 

@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@nuxt/image",
     "@pinia/nuxt",
+    "@nuxt/devtools",
   ],
 
   css: [
@@ -71,10 +72,7 @@ export default defineNuxtConfig({
       redirectOn:     "root",
     },
 
-    vueI18n: {
-      fallbackLocale: "en",
-      legacy: false,
-    },
+    vueI18n: './i18n.config.ts',
 
     // Per component I18n
     vueI18nLoader: true,
@@ -84,4 +82,10 @@ export default defineNuxtConfig({
 
   // Enable Client-side only rendering
   ssr: false,
+
+  // Enable devtool
+  // Since nuxt 3.4
+  devtools: {
+    enabled: true,
+  }
 })

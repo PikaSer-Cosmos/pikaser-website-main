@@ -3,32 +3,75 @@
     <div class="writing-nft-entry-box__main-content">
       <h3 class="text-lg">
         <a :href="class_external_url" target="_blank" rel="noreferrer noopener">
-          {{ props.nft_class.metadata.name || props.nft_class.name.replace("Writing NFT - ", "") }}
+          {{ entry_title_text }}
         </a>
       </h3>
       <section class="mt-4 vertical-middle space-x-1">
-        <NButton
-          icon="carbon:document-tasks"
-          n="purple xs"
-          @click="writingNftReadClassIdList.addOneClassId(props.nft_class.id)"
-          v-if="entry_is_unread"
-        >
-          {{ t("Mark NFT as Read") }}
-        </NButton>
-        <NButton
-          icon="carbon:document-unknown"
-          n="purple xs"
-          @click="writingNftReadClassIdList.removeOneClassId(props.nft_class.id)"
-          v-else
-        >
-          {{ t("Mark NFT as Unread") }}
-        </NButton>
+        <span>
+          <NButton
+            icon="carbon:document-tasks"
+            n="purple xs"
+            @click="writingNftReadClassIdList.addOneClassId(props.nft_class.id)"
+            v-if="entry_is_unread"
+          >
+            {{ t("Mark NFT as Read") }}
+          </NButton>
+          <NButton
+            icon="carbon:document-unknown"
+            n="purple xs"
+            @click="writingNftReadClassIdList.removeOneClassId(props.nft_class.id)"
+            v-else
+          >
+            {{ t("Mark NFT as Unread") }}
+          </NButton>
+        </span>
+        <span>
+          <NButton
+            icon="carbon:share"
+            n="purple xs"
+            @click="entry_sharing_panel_visible = false"
+            v-if="entry_sharing_panel_visible"
+          >
+            {{ t("Hide Sharing Panel") }}
+          </NButton>
+          <NButton
+            icon="carbon:share"
+            n="purple xs"
+            @click="entry_sharing_panel_visible = true"
+            v-else
+          >
+            {{ t("Show Sharing Panel") }}
+          </NButton>
+        </span>
+      </section>
+      <section
+        v-if="entry_sharing_panel_visible"
+        class="mt-4"
+      >
+        <section>
+          <textarea
+            v-element-in-view="resizeTextarea"
+            class="w-full p-2"
+            ref="sharingTextarea"
+            readonly
+            :value="entry_sharing_panel_text"
+          />
+        </section>
+        <section class="mt-2">
+          <NButton
+            icon="carbon:copy"
+            n="green xs"
+            @click="copyTextArea"
+          >
+            {{ t("Copy to Clipboard") }}
+          </NButton>
+        </section>
       </section>
       <section
         v-if="entry_displayed_as_expanded"
       >
         <section class="mt-4">
-          <a :href="`https://liker.land/nft/class/${props.nft_class.id}`" target="_blank" rel="noreferrer noopener">
+          <a :href="entry_liker_url" target="_blank" rel="noreferrer noopener">
             {{ t("NFT Page on Liker Land") }}
           </a>
           <span> - </span>
@@ -124,10 +167,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from '#i18n'
 import { useAsyncData } from "#imports"
 import dayjs from 'dayjs'
+import { useToast } from 'vue-toast-notification'
+import 'vue-toast-notification/dist/theme-sugar.css'
 
 import { useWritingNftReadClassIdList } from "./composables/writing_nft_read_class_list"
 import {
@@ -146,6 +191,8 @@ const writingNftOptionsStore = useWritingNftOptionsStore()
 
 const I18n = useI18n()
 const { t } = I18n
+
+const $toast = useToast()
 
 const emit = defineEmits<{
   (e: 'filter_by_creator_address', address: string): void
@@ -306,6 +353,9 @@ const entry_displayed_as_expanded = computed<boolean>(() => {
   return entry_is_unread.value
 })
 
+const entry_title_text = computed<string>(() => props.nft_class.metadata.name || props.nft_class.name.replace("Writing NFT - ", ""))
+const entry_liker_url = computed<string>(() => `https://liker.land/nft/class/${props.nft_class.id}`)
+
 const entry_visible = computed<boolean>(() => {
   if (writingNftOptionsStore.read_writing_nft_class_display_style === ReadWritingNftClassDisplayStyle.HIDDEN && entry_is_read.value) {
     return false
@@ -329,6 +379,38 @@ const entry_visible = computed<boolean>(() => {
 
   return true
 })
+
+const entry_sharing_panel_visible = ref<boolean>(false)
+const entry_sharing_panel_text = computed<string>(() => {
+  return `
+#like #likecoin #WritingNFT
+
+${entry_title_text.value}
+
+${props.nft_class.description}
+
+${entry_liker_url.value}
+  `.trim()
+})
+
+const sharingTextarea = ref(null)
+function resizeTextarea() {
+  const area = sharingTextarea.value
+  area.style.overflow = 'hidden'
+  area.style.height = area.scrollHeight + 'px'
+}
+async function copyTextArea() {
+  const area = sharingTextarea.value
+  const textToCopy = area.value
+
+  const clipBoard = navigator.clipboard
+  await clipBoard.writeText(textToCopy)
+
+  $toast.success(t("Copied To Clipboard"), {
+    position: 'top',
+    duration: 3000,
+  })
+}
 
 const class_external_url = computed<string>(() => {
   const external_url_from_metadata = props.nft_class.metadata.external_url
@@ -386,6 +468,11 @@ en:
   Mark NFT as Read: Mark NFT as Read
   Mark NFT as Unread: Mark NFT as Unread
 
+  Show Sharing Panel: Show Sharing Panel
+  Hide Sharing Panel: Hide Sharing Panel
+  Copy to Clipboard: Copy to Clipboard
+  Copied To Clipboard: Copied To Clipboard
+
   View NFTs by This Creator: View NFTs by This Creator
   Bookmark This Creator: Bookmark This Creator
   Unbookmark This Creator: Unbookmark This Creator
@@ -397,6 +484,11 @@ zh:
   Current Price: 現時價格
   Sold: 已賣出
   ISCN Owner: ISCN 擁有者
+
+  Show Sharing Panel: 顯示分享面板
+  Hide Sharing Panel: 隱藏分享面板
+  Copy to Clipboard: 複製到剪貼板
+  Copied To Clipboard: 已複製到剪貼板
 
   Mark NFT as Read: 將此NFT標記為已讀
   Mark NFT as Unread: 將此NFT標記為未讀

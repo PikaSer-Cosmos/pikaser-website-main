@@ -31,7 +31,8 @@
     "dayjs": "^1.11.5",
     "pinia": "^2.0.22",
     "superjson": "^1.9.1",
-    "urijs": "^1.19.11"
+    "urijs": "^1.19.11",
+    "vue-toast-notification": "^3.0"
   },
   "engines": {
     "node": "18.x"

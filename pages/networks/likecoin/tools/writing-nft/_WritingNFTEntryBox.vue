@@ -25,7 +25,7 @@
         </NButton>
       </section>
       <section
-        v-if="entry_displayed_as_collapsed"
+        v-if="entry_displayed_as_expanded"
       >
         <section class="mt-4">
           <a :href="`https://liker.land/nft/class/${props.nft_class.id}`" target="_blank" rel="noreferrer noopener">
@@ -298,7 +298,7 @@ const entry_is_read = computed<boolean>(() => {
   return !entry_is_unread.value
 })
 
-const entry_displayed_as_collapsed = computed<boolean>(() => {
+const entry_displayed_as_expanded = computed<boolean>(() => {
   if (writingNftOptionsStore.read_writing_nft_class_display_style !== ReadWritingNftClassDisplayStyle.COLLAPSED) {
     return true
   }

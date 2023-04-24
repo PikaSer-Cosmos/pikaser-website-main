@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@cosmjs/stargate": "^0.29.0",
-    "@lamsal-de/vue-element-in-view": "^1.0.2",
     "@nuxt/kit": "^3.0.0",
     "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge",
     "@pinia/nuxt": "^0.4.2",
@@ -32,6 +31,7 @@
     "pinia": "^2.0.22",
     "superjson": "^1.9.1",
     "urijs": "^1.19.11",
+    "vue-observe-visibility": "^2.0.0-alpha.1",
     "vue-toast-notification": "^3.0"
   },
   "engines": {

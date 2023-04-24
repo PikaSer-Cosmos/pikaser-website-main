@@ -751,11 +751,6 @@
     axios "^0.27.2"
     long "^4.0.0"
 
-"@lamsal-de/vue-element-in-view@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@lamsal-de/vue-element-in-view/-/vue-element-in-view-1.0.2.tgz#c11416f1e9b74c5f0fdd09cb8f3ed46e5742c9f2"
-  integrity sha512-ygmGt5or6YNDSHrv2cepASHQg1Fjfsj49yP95t8EL7J39QwVWq/ssGOc3j9yqIcgHPtE0M1N4fMWRvGhVwZcEQ==
-
 "@mapbox/node-pre-gyp@^1.0.5":
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/@mapbox/node-pre-gyp/-/node-pre-gyp-1.0.10.tgz#8e6735ccebbb1581e5a7e652244cadc8a844d03c"
@@ -7795,6 +7790,11 @@ vue-i18n@9.3.0-beta.17:
     "@intlify/shared" "9.3.0-beta.17"
     "@intlify/vue-devtools" "9.3.0-beta.17"
     "@vue/devtools-api" "^6.2.1"
+
+vue-observe-visibility@^2.0.0-alpha.1:
+  version "2.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/vue-observe-visibility/-/vue-observe-visibility-2.0.0-alpha.1.tgz#1e4eda7b12562161d58984b7e0dea676d83bdb13"
+  integrity sha512-flFbp/gs9pZniXR6fans8smv1kDScJ8RS7rEpMjhVabiKeq7Qz3D9+eGsypncjfIyyU84saU88XZ0zjbD6Gq/g==
 
 vue-router@^4.1.6:
   version "4.1.6"

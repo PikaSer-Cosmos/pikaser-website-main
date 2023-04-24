@@ -293,7 +293,7 @@
                 @show_for_blocked_creator_address="(class_id) => all_invisible_writing_nft_class_ids.delete(class_id)"
               />
             </div>
-            <div v-element-in-view="on_load_more_button_visibility_changed">
+            <div v-observe-visibility="on_load_more_button_visibility_changed">
               <NButton
                 class="w-full text-center"
                 :disabled="!load_more_button_enabled"
@@ -566,7 +566,8 @@ function update_auto_load_more_recent_writing_nft_class_entries_enabled(val) {
   auto_load_more_recent_writing_nft_class_entries_enabled.value = val
   writingNftOptionsStore.update_auto_load_more_recent_writing_nft_class_entries_enabled(val)
 }
-function on_load_more_button_visibility_changed() {
+function on_load_more_button_visibility_changed(isVisible, _entry) {
+  if (!isVisible) { return }
   if (!auto_load_more_recent_writing_nft_class_entries_enabled.value) { return }
 
   load_more_recent_writing_nft_class_entries()

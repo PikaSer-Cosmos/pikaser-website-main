@@ -24,7 +24,7 @@
   "dependencies": {
     "@cosmjs/stargate": "^0.29.0",
     "@nuxt/kit": "^3.0.0",
-    "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge",
+    "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge@8.0.0-beta.11-28025896.b896eaa",
     "@pinia/nuxt": "^0.4.2",
     "@vueuse/core": "^9.2.0",
     "dayjs": "^1.11.5",

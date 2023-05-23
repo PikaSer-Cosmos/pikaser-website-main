@@ -1196,7 +1196,7 @@
     lodash.template "^4.5.0"
     pathe "^1.0.0"
 
-"@nuxtjs/i18n@npm:@nuxtjs/i18n-edge":
+"@nuxtjs/i18n@npm:@nuxtjs/i18n-edge@8.0.0-beta.11-28025896.b896eaa":
   version "8.0.0-beta.11-28025896.b896eaa"
   resolved "https://registry.yarnpkg.com/@nuxtjs/i18n-edge/-/i18n-edge-8.0.0-beta.11-28025896.b896eaa.tgz#ac1fa12f329ff7fbe3db1d896d9ba4d53f574d62"
   integrity sha512-EEyKDXCdeN9n9OdrQ/VJvzNjstdY+WhN5kYJpVlaM/JMkVPw+j5c+pIIfb370AZTU5jTjde9H5pRtrRZ/q6dwg==
@@ -7916,6 +7916,7 @@ word-wrap@~1.2.3:
   integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==

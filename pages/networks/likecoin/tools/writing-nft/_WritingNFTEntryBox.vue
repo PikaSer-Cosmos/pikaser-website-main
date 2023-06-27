@@ -43,6 +43,24 @@
             {{ t("Show Sharing Panel") }}
           </NButton>
         </span>
+        <span>
+          <NButton
+            icon="carbon:money"
+            n="purple xs"
+            @click="entry_likecoin_iframe_visible = false"
+            v-if="entry_likecoin_iframe_visible"
+          >
+            {{ t("Hide NFT Widget") }}
+          </NButton>
+          <NButton
+            icon="carbon:money"
+            n="purple xs"
+            @click="entry_likecoin_iframe_visible = true"
+            v-else
+          >
+            {{ t("Show NFT Widget") }}
+          </NButton>
+        </span>
       </section>
       <section
         v-if="entry_sharing_panel_visible"
@@ -66,6 +84,16 @@
             {{ t("Copy to Clipboard") }}
           </NButton>
         </section>
+      </section>
+      <section
+        v-if="entry_likecoin_iframe_visible"
+        class="mt-4"
+      >
+        <iframe
+          width="360"
+          height="480"
+          :src="entry_likecoin_iframe_src"
+        />
       </section>
       <section
         v-if="entry_displayed_as_expanded"
@@ -412,6 +440,13 @@ async function copyTextArea() {
   })
 }
 
+// https://docs.like.co/general-guides/writing-nft/collect-writing-nft/nft-widget
+// No actual doc about the URL though
+const entry_likecoin_iframe_visible = ref<boolean>(false)
+const entry_likecoin_iframe_src = computed<string>(() => {
+  return `https://button.like.co/in/embed/nft?class_id=${props.nft_class.id}`
+})
+
 const class_external_url = computed<string>(() => {
   const external_url_from_metadata = props.nft_class.metadata.external_url
   if (typeof external_url_from_metadata === 'string' && external_url_from_metadata.startsWith('http')) {
@@ -473,6 +508,9 @@ en:
   Copy to Clipboard: Copy to Clipboard
   Copied To Clipboard: Copied To Clipboard
 
+  Show NFT Widget: Show NFT Widget
+  Hide NFT Widget: Hide NFT Widget
+
   View NFTs by This Creator: View NFTs by This Creator
   Bookmark This Creator: Bookmark This Creator
   Unbookmark This Creator: Unbookmark This Creator
@@ -489,6 +527,9 @@ zh:
   Hide Sharing Panel: 隱藏分享面板
   Copy to Clipboard: 複製到剪貼板
   Copied To Clipboard: 已複製到剪貼板
+
+  Show NFT Widget: 顯示 NFT Widget
+  Hide NFT Widget: 隱藏 NFT Widget
 
   Mark NFT as Read: 將此NFT標記為已讀
   Mark NFT as Unread: 將此NFT標記為未讀

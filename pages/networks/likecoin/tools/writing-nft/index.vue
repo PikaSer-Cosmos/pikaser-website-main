@@ -72,6 +72,14 @@
             </NButton>
             <NButton
               class="ml-2 flex-grow-0"
+              icon="carbon:link"
+              n="green s"
+              @click="read_likecoin_address_from_leap"
+            >
+              {{ t("Leap") }}
+            </NButton>
+            <NButton
+              class="ml-2 flex-grow-0"
               icon="carbon:clean"
               n="green s"
               @click="recent_writing_nfts_data_collector_address = ''"
@@ -652,8 +660,9 @@ function load_more_recent_writing_nft_class_entries() {
 }
 
 
+// region Keplr
 // https://github.com/likecoin/mainnet/blob/master/keplr.json
-const likecoin_chaininfo: ChainInfo = {
+const likecoin_keplr_chaininfo: ChainInfo = {
   "chainId": "likecoin-mainnet-2",
   "chainName": "LikeCoin",
   "rpc": "https://mainnet-node.like.co/rpc/",
@@ -708,14 +717,36 @@ async function read_likecoin_address_from_keplr() {
     return
   }
 
-  await keplr!.experimentalSuggestChain(likecoin_chaininfo)
-  await keplr!.enable(likecoin_chaininfo.chainId)
+  await keplr!.experimentalSuggestChain(likecoin_keplr_chaininfo)
+  await keplr!.enable(likecoin_keplr_chaininfo.chainId)
 
-  const offlineSigner = keplr!.getOfflineSigner(likecoin_chaininfo.chainId)
+  const offlineSigner = keplr!.getOfflineSigner(likecoin_keplr_chaininfo.chainId)
   const accounts = await offlineSigner.getAccounts()
 
   recent_writing_nfts_data_collector_address.value = accounts[0].address
 }
+// endregion
+
+
+// region Leap
+// https://docs.leapwallet.io/cosmos/for-dapps-connect-to-leap/api-reference
+async function read_likecoin_address_from_leap() {
+  const { leap } = window
+  if (leap == null) {
+    // alert("You need to install Leap wallet")
+    return
+  }
+
+  // Yes we are using chaininfo for Keplr (it might blow up)
+  await leap!.experimentalSuggestChain(likecoin_keplr_chaininfo)
+  await leap!.enable(likecoin_keplr_chaininfo.chainId)
+
+  const offlineSigner = await leap!.getOfflineSignerAuto(likecoin_keplr_chaininfo.chainId)
+  const accounts = await offlineSigner.getAccounts()
+
+  recent_writing_nfts_data_collector_address.value = accounts[0].address
+}
+// endregion
 
 
 

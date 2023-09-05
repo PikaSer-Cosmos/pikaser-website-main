@@ -134,7 +134,10 @@
           <section
             class="pt-2 border-t-1"
           >
-            <div class="leading-1.2em tracking-wide op50">
+            <div
+              class="leading-1.2em tracking-wide op50"
+              v-observe-visibility="reenable_auto_refresh"
+            >
               {{ t("Auto Refresh.Auto Refresh Interval") }}
             </div>
             <div class="mt-1 flex gap-3 items-center">
@@ -143,6 +146,7 @@
                 n="lime6 dark:lime5 sm"
                 value=0
                 selected
+                @click="forget_last_used_auto_refresh_interval"
               >
                 {{ t("Auto Refresh.Disabled") }}
               </NRadio>
@@ -443,6 +447,7 @@ const auto_refresh_interval_in_seconds_as_integer = computed<number>(() => {
   if (isNaN(parsed_int)) { return 0 }
   return parsed_int
 })
+let last_used_auto_refresh_interval_in_seconds_input = null
 const auto_refresh_interval_id = ref<number|null>(null)
 watchEffect(reset_auto_refresh_interval)
 function reset_auto_refresh_interval() {
@@ -465,6 +470,18 @@ watchEffect(() => {
 })
 function disable_auto_refresh() {
   auto_refresh_interval_in_seconds_input.value = "0"
+}
+function disable_auto_refresh_temporarily() {
+  last_used_auto_refresh_interval_in_seconds_input = auto_refresh_interval_in_seconds_input.value
+  disable_auto_refresh()
+}
+function reenable_auto_refresh(isVisible) {
+  if (!isVisible) { return }
+  if (last_used_auto_refresh_interval_in_seconds_input == null) { return }
+  auto_refresh_interval_in_seconds_input.value = last_used_auto_refresh_interval_in_seconds_input
+}
+function forget_last_used_auto_refresh_interval() {
+  last_used_auto_refresh_interval_in_seconds_input = null
 }
 function manually_reload_recent_writing_nfts_data() {
   reset_auto_refresh_interval()
@@ -608,7 +625,7 @@ function load_more_recent_writing_nft_class_entries() {
   more_nft_being_loaded.value = true
 
   // Disable auto refresh to avoid unexpected progress loss
-  disable_auto_refresh()
+  disable_auto_refresh_temporarily()
 
   const earliest_time_in_unix_time =
     dayjs.unix(earliest_writing_nft_created_at_limit_searched_in_unix.value)

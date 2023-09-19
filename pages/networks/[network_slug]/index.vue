@@ -5,32 +5,6 @@
     >
       <article class="w-full">
         <h1 class="text-2xl font-semibold mb-6">{{ data.title }}</h1>
-        <section class="markdown-body">
-          <ContentRenderer :value="data" />
-        </section>
-
-        <div v-if="!all_proposal_posts_loading && all_proposal_posts.length > 0">
-          <hr class="my-8" />
-          <section>
-            <h2 class="text-2xl font-600 mb-2">
-              {{ t("Past Proposal Decisions") }}
-            </h2>
-            <div class="divide-y">
-              <article v-for="post of all_proposal_posts" :key="post.slug" class="page-entry-box">
-                <div class="page-entry-box__main-content">
-                  <h3 class="text-lg mb-2">
-                    <nuxt-link :to="post._path">
-                      {{ post.title }}
-                    </nuxt-link>
-                  </h3>
-                  <span>
-                {{ post.description }}
-              </span>
-                </div>
-              </article>
-            </div>
-          </section>
-        </div>
 
         <div v-if="all_service_n_tools_entries_loaded && (all_service_posts.length + all_tool_pages.length) > 0">
           <hr class="my-8"/>
@@ -61,6 +35,33 @@
                   <span>
                     {{ post.description }}
                   </span>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+
+        <section class="markdown-body">
+          <ContentRenderer :value="data" />
+        </section>
+
+        <div v-if="!all_proposal_posts_loading && all_proposal_posts.length > 0">
+          <hr class="my-8" />
+          <section>
+            <h2 class="text-2xl font-600 mb-2">
+              {{ t("Past Proposal Decisions") }}
+            </h2>
+            <div class="divide-y">
+              <article v-for="post of all_proposal_posts" :key="post.slug" class="page-entry-box">
+                <div class="page-entry-box__main-content">
+                  <h3 class="text-lg mb-2">
+                    <nuxt-link :to="post._path">
+                      {{ post.title }}
+                    </nuxt-link>
+                  </h3>
+                  <span>
+                {{ post.description }}
+              </span>
                 </div>
               </article>
             </div>

@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@pinia/nuxt",
     "@nuxt/devtools",
+    "@nuxt/devtools-ui-kit",
   ],
 
   css: [

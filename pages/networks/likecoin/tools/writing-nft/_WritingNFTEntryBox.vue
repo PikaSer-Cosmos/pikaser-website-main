@@ -115,6 +115,7 @@
             <span>: </span>
             <span v-if="class_purchase_data_loading">...</span>
             <strong v-else-if="class_purchase_data_error != null">???</strong>
+            <strong v-else-if="class_purchase_data.price < 0">{{ t("Sold Out") }}</strong>
             <strong v-else>{{ class_purchase_data.price }} $LIKE</strong>
           </span>
             <span> - </span>
@@ -497,6 +498,7 @@ en:
   NFT Page on Liker Land: NFT Page on Liker Land
   On-Chain Data: On-Chain Data
   Current Price: Current Price
+  Sold Out: Sold Out
   Sold: Sold
   ISCN Owner: ISCN Owner
 
@@ -520,6 +522,7 @@ zh:
   NFT Page on Liker Land: Liker Land上的NFT頁面
   On-Chain Data: LikeCoin鏈上資料
   Current Price: 現時價格
+  Sold Out: 售馨
   Sold: 已賣出
   ISCN Owner: ISCN 擁有者
 

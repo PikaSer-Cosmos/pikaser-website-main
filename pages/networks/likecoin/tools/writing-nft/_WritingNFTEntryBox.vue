@@ -116,7 +116,7 @@
             <span v-if="class_purchase_data_loading">...</span>
             <strong v-else-if="class_purchase_data_error != null">???</strong>
             <strong v-else-if="class_purchase_data.price < 0">{{ t("Sold Out") }}</strong>
-            <strong v-else>{{ class_purchase_data.price }} $LIKE</strong>
+            <strong v-else>{{ class_purchase_data.price }} USD</strong>
           </span>
             <span> - </span>
             <span>

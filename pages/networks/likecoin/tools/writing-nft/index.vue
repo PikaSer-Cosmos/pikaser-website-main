@@ -478,6 +478,8 @@ function disable_auto_refresh_temporarily() {
 function reenable_auto_refresh(isVisible) {
   if (!isVisible) { return }
   if (last_used_auto_refresh_interval_in_seconds_input == null) { return }
+  // DO NOT "re-enable" when it's already enabled for any reason
+  if (auto_refresh_interval_in_seconds_input.value !== "0") { return }
   auto_refresh_interval_in_seconds_input.value = last_used_auto_refresh_interval_in_seconds_input
 }
 function forget_last_used_auto_refresh_interval() {

@@ -7,7 +7,34 @@
       <section>
         <h2 class="text-xl font-semibold mb-4">{{ t("Recent Writing NFTs") }}</h2>
         <section class="mt-4 space-y-2">
-          <section v-if="recent_writing_nfts_data_pagination_limit_options.length > 1">
+          <section
+            class="pt-2"
+          >
+            <div
+              class="leading-1.2em tracking-wide op50"
+            >
+              {{ t("Data Sources.Data Source") }}
+            </div>
+            <div class="mt-1 flex gap-3 items-center">
+              <NRadio
+                v-model="nft_class_data_source"
+                n="lime6 dark:lime5 sm"
+                value=""
+                selected
+              >
+                {{ t("Data Sources.Default") }}
+              </NRadio>
+              <NRadio
+                v-model="nft_class_data_source"
+                n="lime6 dark:lime5 sm"
+                class="ml"
+                value=likecoin-indexer.pikaser.net
+              >
+                {{ t("Data Sources.PikaSer Indexer") }}
+              </NRadio>
+            </div>
+          </section>
+          <section class="border-t-1" v-if="recent_writing_nfts_data_pagination_limit_options.length > 1">
             <label for="recent_writing_nfts_data_pagination_limit_select">
               {{ t("Display at most") }}:
             </label>
@@ -520,6 +547,9 @@ function reload_recent_writing_nfts_data() {
 }
 let last_used_earliest_time_in_unix_time = null
 
+const nft_class_data_source = ref("")
+watch(nft_class_data_source, reload_recent_writing_nfts_data)
+
 const {
   pending: recent_writing_nfts_data_loading,
   data: recent_writing_nft_class_entries,
@@ -531,6 +561,18 @@ const {
     const earliest_time_in_unix_time =
       dayjs().subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days').unix()
     last_used_earliest_time_in_unix_time = earliest_time_in_unix_time
+
+    if (nft_class_data_source.value == "likecoin-indexer.pikaser.net") {
+      return $fetch<unknown>(
+        "https://likecoin-indexer.pikaser.net/apps/main_api/nft_classes",
+        {
+          params: {
+            created_after:  earliest_time_in_unix_time,
+            limit:          recent_writing_nfts_data_pagination_limit.value,
+          },
+        }
+      )
+    }
 
     // https://docs.like.co/developer/likenft/api-reference#ranking-api
     return $fetch<unknown>(
@@ -634,23 +676,38 @@ function load_more_recent_writing_nft_class_entries() {
     .subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days')
     .unix()
   last_used_earliest_time_in_unix_time = earliest_time_in_unix_time
-
-  // https://docs.like.co/developer/likenft/api-reference#ranking-api
-  $fetch<RankingEndpointResponse>(
-    "https://mainnet-node.like.co/likechain/likenft/v1/ranking",
-    {
-      params: {
-        // Not `after`, doc outdated
-        // `created_after` asked from Discord
-        // Introduced in https://github.com/likecoin/likecoin-chain-tx-indexer/commit/457a0550efe44652a51f6912f0a6fa83faf11895
-        created_before:   earliest_writing_nft_created_at_limit_searched_in_unix.value,
-        created_after:    earliest_time_in_unix_time,
-        limit:            recent_writing_nfts_data_pagination_limit.value,
-        creator:          recent_writing_nfts_data_creator_address.value,
-        collector:        recent_writing_nfts_data_collector_address.value,
-      },
+  new Promise((resolve) => {
+    if (nft_class_data_source.value == "likecoin-indexer.pikaser.net") {
+      resolve($fetch<unknown>(
+        "https://likecoin-indexer.pikaser.net/apps/main_api/nft_classes",
+        {
+          params: {
+            created_before: earliest_writing_nft_created_at_limit_searched_in_unix.value,
+            created_after:  earliest_time_in_unix_time,
+            limit:          recent_writing_nfts_data_pagination_limit.value,
+          },
+        }
+      ))
+      return
     }
-  )
+
+    // https://docs.like.co/developer/likenft/api-reference#ranking-api
+    resolve($fetch<RankingEndpointResponse>(
+      "https://mainnet-node.like.co/likechain/likenft/v1/ranking",
+      {
+        params: {
+          // Not `after`, doc outdated
+          // `created_after` asked from Discord
+          // Introduced in https://github.com/likecoin/likecoin-chain-tx-indexer/commit/457a0550efe44652a51f6912f0a6fa83faf11895
+          created_before:   earliest_writing_nft_created_at_limit_searched_in_unix.value,
+          created_after:    earliest_time_in_unix_time,
+          limit:            recent_writing_nfts_data_pagination_limit.value,
+          creator:          recent_writing_nfts_data_creator_address.value,
+          collector:        recent_writing_nfts_data_collector_address.value,
+        },
+      }
+    ))
+  })
   .then((data): LikeCoinNftClassModified[] => {
     // Save time limit used
     earliest_writing_nft_created_at_limit_searched_in_unix.value =
@@ -816,6 +873,11 @@ en:
   Writing NFT Tools: Writing NFT Tools
   Recent Writing NFTs: Recent Writing NFTs
 
+  Data Sources:
+    Data Source: Data Source
+    Default: Default (LikeCoin Tx Indexer)
+    PikaSer Indexer: PikaSer Indexer (Experimental)
+
   Display at most: Display at most
   In last N days: In last N days
   NFT Creator: NFT Creator
@@ -859,6 +921,11 @@ zh:
 
   Writing NFT Tools: Writing NFT 工具
   Recent Writing NFTs: 最近的 Writing NFT
+
+  Data Sources:
+    Data Source: 資料來源
+    Default: 預設 (LikeCoin Tx Indexer)
+    PikaSer Indexer: PikaSer Indexer (實驗性)
 
   Display at most: 顯示最多
   In last N days: 限最近多少日

@@ -569,6 +569,7 @@ const {
           params: {
             created_after:  earliest_time_in_unix_time,
             limit:          recent_writing_nfts_data_pagination_limit.value,
+            iscn_owner:     recent_writing_nfts_data_creator_address.value,
           },
         }
       )
@@ -685,6 +686,7 @@ function load_more_recent_writing_nft_class_entries() {
             created_before: earliest_writing_nft_created_at_limit_searched_in_unix.value,
             created_after:  earliest_time_in_unix_time,
             limit:          recent_writing_nfts_data_pagination_limit.value,
+            iscn_owner:     recent_writing_nfts_data_creator_address.value,
           },
         }
       ))

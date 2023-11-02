@@ -187,9 +187,6 @@
         <section class="mt-4" v-if="class_metadata_image_valid">
           <img :src="class_metadata_image_url_sometimes_converted" loading="lazy" />
         </section>
-        <section class="mt-4" v-else>
-          <p>{{ class_metadata.image }}</p>
-        </section>
       </section>
     </div>
   </article>

@@ -145,7 +145,7 @@
           </span>
           </p>
           <section
-            v-if="class_metadata_valid"
+            v-if="iscn_owner_ready"
             class="mt-4 vertical-middle space-x-1"
           >
             <NButton
@@ -198,6 +198,7 @@ import { useI18n } from '#i18n'
 import { useAsyncData } from "#imports"
 import dayjs from 'dayjs'
 import { useToast } from 'vue-toast-notification'
+import _once from "lodash.once"
 import 'vue-toast-notification/dist/theme-sugar.css'
 
 import { useWritingNftReadClassIdList } from "./composables/writing_nft_read_class_list"
@@ -287,14 +288,14 @@ const {
 )
 const class_purchase_data_valid = computed<boolean>(() => !class_purchase_data_loading.value && class_purchase_data_error.value == null)
 
-const fetch_class_metadata_promise = $fetch<ClassMetadata>(
+const get_fetch_class_metadata_promise = _once(() => $fetch<ClassMetadata>(
   "https://api.like.co/likernft/metadata",
   {
     params: {
       iscn_id: props.nft_class.parent.iscn_id_prefix,
     },
   }
-)
+))
 
 const {
   pending:  class_metadata_loading,
@@ -306,11 +307,29 @@ const {
     props.nft_class.parent.iscn_id_prefix,
   ].join("/"),
   (() => {
-    // https://docs.like.co/developer/likenft/api-reference
-    return fetch_class_metadata_promise
+    return new Promise((resolve) => {
+      if (props.nft_class.iscn?.owner != null && props.nft_class.metadata?.image != null) {
+        resolve({
+          // Only from Pikaser Indexer
+          iscn_owner: props.nft_class.iscn?.owner,
+          image:      props.nft_class.metadata?.image,
+        })
+        return
+      }
+
+      // https://docs.like.co/developer/likenft/api-reference
+      resolve(get_fetch_class_metadata_promise())
+    })
   })
 )
-const class_metadata_valid = computed<boolean>(() => !class_metadata_loading.value && class_metadata_error.value == null)
+const class_metadata_valid = computed<boolean>(() => {
+  return !class_metadata_loading.value && class_metadata_error.value == null
+})
+const iscn_owner_ready = computed<boolean>(() => {
+  if (props.nft_class.iscn?.owner != null) { return true }
+
+  return class_metadata_valid.value
+})
 const class_metadata_image_url_sometimes_converted = computed<String|null>(() => {
   const image_url_from_nft_class_metadata = props.nft_class.metadata.image
   let image_url = null
@@ -338,7 +357,7 @@ const class_metadata_image_valid = computed<boolean>(() => {
 
 
 const creator_bookmarked = computed<boolean>(() => {
-  if (class_metadata_valid.value) {
+  if (iscn_owner_ready.value && class_metadata.value != null) {
     return props.all_bookmarked_creator_addresses.has(class_metadata.value.iscn_owner)
   }
 
@@ -346,7 +365,7 @@ const creator_bookmarked = computed<boolean>(() => {
 })
 
 const creator_blocked = computed<boolean>(() => {
-  if (class_metadata_valid.value) {
+  if (iscn_owner_ready.value && class_metadata.value != null) {
     return props.all_blocked_creator_addresses.has(class_metadata.value.iscn_owner)
   }
 
@@ -363,7 +382,14 @@ const {
     props.nft_class.parent.iscn_id_prefix,
   ].join("/"),
   (() => {
-    return fetch_class_metadata_promise
+    return new Promise((resolve) => {
+      if (iscn_owner_ready.value && class_metadata.value != null) {
+        resolve(class_metadata.value)
+        return
+      }
+
+      resolve(get_fetch_class_metadata_promise())
+    })
     .then((class_metadata_2) => {
       return $fetch(
         `https://api.like.co/users/addr/${class_metadata_2.iscn_owner}/min`,

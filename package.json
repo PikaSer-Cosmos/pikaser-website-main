@@ -30,6 +30,7 @@
     "@pinia/nuxt": "^0.4.2",
     "@vueuse/core": "^9.2.0",
     "dayjs": "^1.11.5",
+    "lodash.once": "^4.1.1",
     "pinia": "^2.0.22",
     "superjson": "^1.9.1",
     "urijs": "^1.19.11",

@@ -312,12 +312,21 @@ const {
 )
 const class_metadata_valid = computed<boolean>(() => !class_metadata_loading.value && class_metadata_error.value == null)
 const class_metadata_image_url_sometimes_converted = computed<String|null>(() => {
-  if (!class_metadata_valid.value) { return null }
+  const image_url_from_nft_class_metadata = props.nft_class.metadata.image
+  let image_url = null
+  if (image_url_from_nft_class_metadata != null && image_url_from_nft_class_metadata !== "") {
+    image_url = image_url_from_nft_class_metadata
+  }
+  else if (class_metadata_valid.value) {
+    image_url = class_metadata.value.image
+  }
+  if (image_url == null) { return null }
+
   // HTTP(s) = just use directly
-  if (class_metadata.value.image.startsWith('http')) { return class_metadata.value.image }
+  if (image_url.startsWith('http')) { return image_url }
   // Arweave = convert into HTTP
-  if (class_metadata.value.image.startsWith('ar://')) {
-    return class_metadata.value.image.replace('ar://', 'https://arweave.net/')
+  if (image_url.startsWith('ar://')) {
+    return image_url.replace('ar://', 'https://arweave.net/')
   }
 
   // Cannot handle

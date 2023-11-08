@@ -425,7 +425,14 @@ const recent_writing_nfts_data_pagination_limit_options = [
   // 50,
   100,
 ]
-const recent_writing_nfts_data_pagination_limit = ref(recent_writing_nfts_data_pagination_limit_options[0])
+const recent_writing_nfts_data_pagination_limit = computed(() => {
+  if (nft_class_data_source.value == "likecoin-indexer.pikaser.net") {
+    // Just return maximum (maybe should pass `null`?)
+    return 1000
+  }
+
+  return recent_writing_nfts_data_pagination_limit_options[0]
+})
 
 const recent_writing_nfts_data_time_limit_in_days_options = [
   3,

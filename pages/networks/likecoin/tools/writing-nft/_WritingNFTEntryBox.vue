@@ -1,5 +1,11 @@
 <template>
   <article class="writing-nft-entry-box" v-if="entry_visible">
+    <div
+      v-observe-visibility="maybe_make_class_purchase_data_visible"
+    ></div>
+    <div
+      v-observe-visibility="make_iscn_data_visible"
+    ></div>
     <div class="writing-nft-entry-box__main-content">
       <h3 class="text-lg">
         <a :href="class_external_url" target="_blank" rel="noreferrer noopener">
@@ -109,7 +115,13 @@
             {{ t("On-Chain Data") }}
           </a>
         </section>
-        <section class="mt-4">
+        <section v-if="class_is_book" class="mt-4">
+          {{ t("NFT Book") }} ({{ props.nft_class.metadata?.nft_meta_collection_name }})
+        </section>
+        <section
+          v-if="class_purchase_data_visible"
+          class="mt-4"
+        >
           <span>
             {{ t("Current Price") }}
             <span>: </span>
@@ -128,6 +140,7 @@
           </span>
         </section>
         <section
+          v-if="iscn_data_visible"
           class="mt-4"
         >
           <p>
@@ -138,7 +151,10 @@
             <span v-else>
             <a :href="`https://liker.land/${class_metadata.iscn_owner}`" target="_blank" rel="noreferrer noopener">
               <strong>{{ class_metadata.iscn_owner }}</strong>
-              <span v-if="!iscn_owner_data_loading && iscn_owner_data != null">
+              <span
+                v-observe-visibility="make_iscn_owner_data_visible"
+              ></span>
+              <span v-if="iscn_owner_data_visible && !iscn_owner_data_loading && iscn_owner_data != null">
                 ({{ iscn_owner_data.displayName }})
               </span>
             </a>
@@ -195,7 +211,7 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { useI18n } from '#i18n'
-import { useAsyncData } from "#imports"
+import { useLazyAsyncData } from "#imports"
 import dayjs from 'dayjs'
 import { useToast } from 'vue-toast-notification'
 import _once from "lodash.once"
@@ -265,11 +281,26 @@ const props = defineProps({
 })
 
 
+const class_is_book = props.nft_class.metadata?.nft_meta_collection_id?.includes("book")
+const class_purchase_data_should_be_visible = !class_is_book
+const class_purchase_data_visible = ref(false)
+function maybe_make_class_purchase_data_visible(isVisible) {
+  // Don't care when it's hidden
+  if (!isVisible) { return }
+  // No change needed
+  if (!class_purchase_data_should_be_visible) { return }
+  // Already visible
+  if (class_purchase_data_visible.value) { return }
+
+  class_purchase_data_visible.value = true
+  refresh_class_purchase_data_when_visible()
+}
 const {
   pending: class_purchase_data_loading,
   data: class_purchase_data,
   error: class_purchase_data_error,
-} = useAsyncData(
+  refresh: refresh_class_purchase_data,
+} = useLazyAsyncData(
   [
     "class_purchase_data",
     props.nft_class.id,
@@ -284,9 +315,30 @@ const {
         },
       }
     )
-  })
+  }),
+  {
+    immediate: false,
+  },
 )
+function refresh_class_purchase_data_when_visible() {
+  // If loaded = don't reload
+  if (!class_purchase_data_loading.value) { return }
+
+  refresh_class_purchase_data()
+}
 const class_purchase_data_valid = computed<boolean>(() => !class_purchase_data_loading.value && class_purchase_data_error.value == null)
+
+const iscn_data_visible = ref(false)
+function make_iscn_data_visible(isVisible) {
+  // Don't care when it's hidden
+  if (!isVisible) { return }
+  // Already visible
+  if (iscn_data_visible.value) { return }
+
+  iscn_data_visible.value = true
+  refresh_class_metadata()
+}
+
 
 const get_fetch_class_metadata_promise = _once(() => $fetch<ClassMetadata>(
   "https://api.like.co/likernft/metadata",
@@ -301,7 +353,8 @@ const {
   pending:  class_metadata_loading,
   data:     class_metadata,
   error:    class_metadata_error,
-} = useAsyncData(
+  refresh:  refresh_class_metadata,
+} = useLazyAsyncData(
   [
     "class_metadata",
     props.nft_class.parent.iscn_id_prefix,
@@ -320,7 +373,10 @@ const {
       // https://docs.like.co/developer/likenft/api-reference
       resolve(get_fetch_class_metadata_promise())
     })
-  })
+  }),
+  {
+    immediate: false,
+  },
 )
 const class_metadata_valid = computed<boolean>(() => {
   return !class_metadata_loading.value && class_metadata_error.value == null
@@ -372,11 +428,23 @@ const creator_blocked = computed<boolean>(() => {
   return false
 })
 
+
+const iscn_owner_data_visible = ref(false)
+function make_iscn_owner_data_visible(isVisible) {
+  // Don't care when it's hidden
+  if (!isVisible) { return }
+  // Already visible
+  if (iscn_owner_data_visible.value) { return }
+
+  iscn_owner_data_visible.value = true
+  refresh_iscn_owner_data()
+}
 const {
   pending:  iscn_owner_data_loading,
   data:     iscn_owner_data,
   error:    iscn_owner_data_error,
-} = useAsyncData(
+  refresh:  refresh_iscn_owner_data,
+} = useLazyAsyncData(
   [
     "iscn_owner_data",
     props.nft_class.parent.iscn_id_prefix,
@@ -395,7 +463,10 @@ const {
         `https://api.like.co/users/addr/${class_metadata_2.iscn_owner}/min`,
       )
     })
-  })
+  }),
+  {
+    immediate: false,
+  },
 )
 
 
@@ -529,6 +600,7 @@ const class_external_url = computed<string>(() => {
 en:
   NFT Page on Liker Land: NFT Page on Liker Land
   On-Chain Data: On-Chain Data
+  NFT Book: NFT Book
   Current Price: Current Price
   Sold Out: Sold Out
   Sold: Sold
@@ -553,6 +625,7 @@ en:
 zh:
   NFT Page on Liker Land: Liker Land上的NFT頁面
   On-Chain Data: LikeCoin鏈上資料
+  NFT Book: NFT 書
   Current Price: 現時價格
   Sold Out: 售馨
   Sold: 已賣出

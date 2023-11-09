@@ -386,6 +386,11 @@ const iscn_owner_ready = computed<boolean>(() => {
 
   return class_metadata_valid.value
 })
+const iscn_owner_value = computed<boolean>(() => {
+  if (props.nft_class.iscn?.owner != null) { return props.nft_class.iscn?.owner }
+
+  return class_metadata.value.iscn_owner
+})
 const class_metadata_image_url_sometimes_converted = computed<String|null>(() => {
   const image_url_from_nft_class_metadata = props.nft_class.metadata.image
   let image_url = null
@@ -413,16 +418,16 @@ const class_metadata_image_valid = computed<boolean>(() => {
 
 
 const creator_bookmarked = computed<boolean>(() => {
-  if (iscn_owner_ready.value && class_metadata.value != null) {
-    return props.all_bookmarked_creator_addresses.has(class_metadata.value.iscn_owner)
+  if (iscn_owner_ready.value) {
+    return props.all_bookmarked_creator_addresses.has(iscn_owner_value.value)
   }
 
   return false
 })
 
 const creator_blocked = computed<boolean>(() => {
-  if (iscn_owner_ready.value && class_metadata.value != null) {
-    return props.all_blocked_creator_addresses.has(class_metadata.value.iscn_owner)
+  if (iscn_owner_ready.value) {
+    return props.all_blocked_creator_addresses.has(iscn_owner_value.value)
   }
 
   return false

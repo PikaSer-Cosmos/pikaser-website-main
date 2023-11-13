@@ -38,7 +38,7 @@
     "vue-toast-notification": "^3.0"
   },
   "engines": {
-    "node": "18.x"
+    "node": "18 || 20"
   },
   "overrides": {
     "@nuxt/kit": "$@nuxt/kit"

@@ -19,18 +19,17 @@
               <NRadio
                 v-model="nft_class_data_source"
                 n="lime6 dark:lime5 sm"
-                value=""
-                selected
+                class="ml"
+                :value=nft_class_data_source_val_4_pikaser_indexer
               >
-                {{ t("Data Sources.Default") }}
+                {{ t("Data Sources.PikaSer Indexer") }}
               </NRadio>
               <NRadio
                 v-model="nft_class_data_source"
                 n="lime6 dark:lime5 sm"
-                class="ml"
-                value=likecoin-indexer.pikaser.net
+                value=""
               >
-                {{ t("Data Sources.PikaSer Indexer") }}
+                {{ t("Data Sources.Default") }}
               </NRadio>
             </div>
           </section>
@@ -426,7 +425,7 @@ const recent_writing_nfts_data_pagination_limit_options = [
   100,
 ]
 const recent_writing_nfts_data_pagination_limit = computed(() => {
-  if (nft_class_data_source.value == "likecoin-indexer.pikaser.net") {
+  if (nft_class_data_source.value == nft_class_data_source_val_4_pikaser_indexer) {
     // Just return maximum (maybe should pass `null`?)
     return 1000
   }
@@ -554,7 +553,8 @@ function reload_recent_writing_nfts_data() {
 }
 let last_used_earliest_time_in_unix_time = null
 
-const nft_class_data_source = ref("")
+const nft_class_data_source_val_4_pikaser_indexer = "likecoin-indexer.pikaser.net"
+const nft_class_data_source = ref(nft_class_data_source_val_4_pikaser_indexer)
 watch(nft_class_data_source, reload_recent_writing_nfts_data)
 
 const {
@@ -569,7 +569,7 @@ const {
       dayjs().subtract(recent_writing_nfts_data_time_limit_in_days.value, 'days').unix()
     last_used_earliest_time_in_unix_time = earliest_time_in_unix_time
 
-    if (nft_class_data_source.value == "likecoin-indexer.pikaser.net") {
+    if (nft_class_data_source.value == nft_class_data_source_val_4_pikaser_indexer) {
       return $fetch<unknown>(
         "https://likecoin-indexer.pikaser.net/apps/main_api/nft_classes",
         {
@@ -686,7 +686,7 @@ function load_more_recent_writing_nft_class_entries() {
     .unix()
   last_used_earliest_time_in_unix_time = earliest_time_in_unix_time
   new Promise((resolve) => {
-    if (nft_class_data_source.value == "likecoin-indexer.pikaser.net") {
+    if (nft_class_data_source.value == nft_class_data_source_val_4_pikaser_indexer) {
       resolve($fetch<unknown>(
         "https://likecoin-indexer.pikaser.net/apps/main_api/nft_classes",
         {
@@ -887,7 +887,7 @@ en:
   Data Sources:
     Data Source: Data Source
     Default: Default (LikeCoin Tx Indexer)
-    PikaSer Indexer: PikaSer Indexer (Experimental)
+    PikaSer Indexer: PikaSer Indexer
 
   Display at most: Display at most
   In last N days: In last N days
@@ -936,7 +936,7 @@ zh:
   Data Sources:
     Data Source: 資料來源
     Default: 預設 (LikeCoin Tx Indexer)
-    PikaSer Indexer: PikaSer Indexer (實驗性)
+    PikaSer Indexer: PikaSer Indexer
 
   Display at most: 顯示最多
   In last N days: 限最近多少日

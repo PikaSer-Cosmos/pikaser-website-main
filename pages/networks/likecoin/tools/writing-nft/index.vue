@@ -29,7 +29,7 @@
                 n="lime6 dark:lime5 sm"
                 value=""
               >
-                {{ t("Data Sources.Default") }}
+                {{ t("Data Sources.LikeCoin Tx Indexer") }}
               </NRadio>
             </div>
           </section>
@@ -886,7 +886,7 @@ en:
 
   Data Sources:
     Data Source: Data Source
-    Default: Default (LikeCoin Tx Indexer)
+    LikeCoin Tx Indexer: LikeCoin Tx Indexer
     PikaSer Indexer: PikaSer Indexer
 
   Display at most: Display at most
@@ -935,7 +935,7 @@ zh:
 
   Data Sources:
     Data Source: 資料來源
-    Default: 預設 (LikeCoin Tx Indexer)
+    LikeCoin Tx Indexer: LikeCoin Tx Indexer
     PikaSer Indexer: PikaSer Indexer
 
   Display at most: 顯示最多

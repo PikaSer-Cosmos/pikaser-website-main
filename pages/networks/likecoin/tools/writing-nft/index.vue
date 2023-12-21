@@ -19,7 +19,7 @@
               <NRadio
                 v-model="nft_class_data_source"
                 n="lime6 dark:lime5 sm"
-                class="ml"
+                class=""
                 :value=nft_class_data_source_val_4_pikaser_indexer
               >
                 {{ t("Data Sources.PikaSer Indexer") }}
@@ -33,7 +33,44 @@
               </NRadio>
             </div>
           </section>
-          <section class="border-t-1" v-if="recent_writing_nfts_data_pagination_limit_options.length > 1">
+          <section
+            class="pt-2"
+            v-if="nft_class_data_source == nft_class_data_source_val_4_pikaser_indexer"
+          >
+            <div
+              class="leading-1.2em tracking-wide op50"
+            >
+              {{ t("Nft Type Category.Nft Type") }}
+            </div>
+            <div class="mt-1 flex gap-3 items-center">
+              <NRadio
+                v-model="nft_type_category"
+                n="lime6 dark:lime5 sm"
+                class=""
+                value=""
+              >
+                {{ t("Nft Type Category.All") }}
+              </NRadio>
+              <NRadio
+                v-model="nft_type_category"
+                n="lime6 dark:lime5 sm"
+                value="writing_nft"
+              >
+                {{ t("Nft Type Category.Writing NFT") }}
+              </NRadio>
+              <NRadio
+                v-model="nft_type_category"
+                n="lime6 dark:lime5 sm"
+                value="nft_book"
+              >
+                {{ t("Nft Type Category.NFT Book") }}
+              </NRadio>
+            </div>
+          </section>
+          <section
+            class="pt-2 border-t-1"
+            v-if="recent_writing_nfts_data_pagination_limit_options.length > 1"
+          >
             <label for="recent_writing_nfts_data_pagination_limit_select">
               {{ t("Display at most") }}:
             </label>
@@ -557,6 +594,9 @@ const nft_class_data_source_val_4_pikaser_indexer = "likecoin-indexer.pikaser.ne
 const nft_class_data_source = ref(nft_class_data_source_val_4_pikaser_indexer)
 watch(nft_class_data_source, reload_recent_writing_nfts_data)
 
+const nft_type_category = ref("")
+watch(nft_type_category, reload_recent_writing_nfts_data)
+
 const {
   pending: recent_writing_nfts_data_loading,
   data: recent_writing_nft_class_entries,
@@ -578,6 +618,8 @@ const {
             limit:          recent_writing_nfts_data_pagination_limit.value,
             iscn_owner:     recent_writing_nfts_data_creator_address.value,
             nft_owner:      recent_writing_nfts_data_collector_address.value,
+
+            nft_type_category: nft_type_category.value,
           },
         }
       )
@@ -696,6 +738,8 @@ function load_more_recent_writing_nft_class_entries() {
             limit:          recent_writing_nfts_data_pagination_limit.value,
             iscn_owner:     recent_writing_nfts_data_creator_address.value,
             nft_owner:      recent_writing_nfts_data_collector_address.value,
+
+            nft_type_category: nft_type_category.value,
           },
         }
       ))
@@ -889,6 +933,12 @@ en:
     LikeCoin Tx Indexer: LikeCoin Tx Indexer
     PikaSer Indexer: PikaSer Indexer
 
+  Nft Type Category:
+    Nft Type: NFT Type
+    All: All
+    Writing NFT: Writing NFT
+    NFT Book: NFT Book
+
   Display at most: Display at most
   In last N days: In last N days
   NFT Creator: NFT Creator
@@ -937,6 +987,12 @@ zh:
     Data Source: 資料來源
     LikeCoin Tx Indexer: LikeCoin Tx Indexer
     PikaSer Indexer: PikaSer Indexer
+
+  Nft Type Category:
+    Nft Type: NFT種類
+    All: 所有
+    Writing NFT: Writing NFT
+    NFT Book: NFT書
 
   Display at most: 顯示最多
   In last N days: 限最近多少日

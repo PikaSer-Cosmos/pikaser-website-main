@@ -40,6 +40,9 @@
   "engines": {
     "node": "18 || 20"
   },
+  "resolutions": {
+    "string-width": "4.2.3"
+  },
   "overrides": {
     "@nuxt/kit": "$@nuxt/kit"
   }

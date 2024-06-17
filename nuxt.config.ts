@@ -88,5 +88,9 @@ export default defineNuxtConfig({
   // Since nuxt 3.4
   devtools: {
     enabled: true,
-  }
+  },
+
+  future: {
+    compatibilityVersion: 4,
+  },
 })

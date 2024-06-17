@@ -38,7 +38,7 @@
     "vue-toast-notification": "^3.0"
   },
   "engines": {
-    "node": "18 || 20"
+    "node": "20.x"
   },
   "resolutions": {
     "string-width": "4.2.3"

@@ -52,6 +52,13 @@ definePageMeta({
 })
 </script>
 
+<style lang="scss">
+.shiki .line {
+  // Since unknown version default style become display: inline-block
+  display: block;
+}
+</style>
+
 <i18n lang="yaml">
 en:
   meta:

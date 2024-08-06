@@ -25,6 +25,8 @@ export default defineNuxtConfig({
     classSuffix: "",
   },
 
+  compatibilityDate: '2024-08-06',
+
   content: {
     highlight: {
       theme: {

@@ -74,7 +74,7 @@
       >
         <section>
           <textarea
-            v-element-in-view="resizeTextarea"
+            v-observe-visibility="resizeTextarea"
             class="w-full p-2"
             ref="sharingTextarea"
             readonly
@@ -531,7 +531,7 @@ ${entry_liker_url.value}
 })
 
 const sharingTextarea = ref(null)
-function resizeTextarea() {
+function resizeTextarea(_isVisible) {
   const area = sharingTextarea.value
   area.style.overflow = 'hidden'
   area.style.height = area.scrollHeight + 'px'

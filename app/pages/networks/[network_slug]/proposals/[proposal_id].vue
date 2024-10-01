@@ -42,6 +42,7 @@ useContentHead(data)
 </script>
 
 <style lang="scss">
+@use "sass:color";
 
 .markdown-body {
   background-color: transparent;
@@ -52,7 +53,7 @@ useContentHead(data)
     // This state uses darker color
     // The rule must be put on top
     &:visited {
-      color: lighten(orange, 10%);
+      color: color.adjust(orange, $lightness: 10%);
     }
     &:active ,
     &:hover {

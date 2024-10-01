@@ -51,16 +51,16 @@ export default defineNuxtConfig({
   i18n: {
     locales: [
       {
-        code: "en",
-        iso:  "en",
-        name: "English",
-        file: "en.js",
+        code:     "en",
+        language: "en",
+        name:     "English",
+        file:     "en.js",
       },
       {
-        code: "zh",
-        iso:  "zh-Hant",
-        name: "正體中文",
-        file: "zh.js",
+        code:     "zh",
+        language: "zh-Hant",
+        name:     "正體中文",
+        file:     "zh.js",
       },
     ],
     defaultLocale:  "en",
@@ -81,6 +81,19 @@ export default defineNuxtConfig({
     vueI18nLoader: true,
 
     langDir: "locales",
+  },
+
+  vite: {
+    vue: {
+      optionsAPI: false,
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: "modern-compiler",
+        },
+      },
+    },
   },
 
   // Enable Client-side only rendering

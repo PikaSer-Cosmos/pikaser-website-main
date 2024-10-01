@@ -90,6 +90,7 @@ useHead({
 </script>
 
 <style lang="scss" scoped>
+@use "sass:color";
 
 a {
   color: yellow;
@@ -97,7 +98,7 @@ a {
   // This state uses darker color
   // The rule must be put on top
   &:visited {
-    color: lighten(orange, 10%);
+    color: color.adjust(orange, $lightness: 10%);
   }
   &:active ,
   &:hover {

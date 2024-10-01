@@ -944,6 +944,8 @@ en:
   In last N days: In last N days
   NFT Creator: NFT Creator
   NFT Collector: NFT Collector
+  Keplr: Keplr
+  Leap: Leap
   Clear: Clear
 
   Only Show "Complete" NFTs: Only Show "Complete" NFTs
@@ -999,6 +1001,8 @@ zh:
   In last N days: 限最近多少日
   NFT Creator: NFT 創造者
   NFT Collector: NFT 收藏者
+  Keplr: Keplr
+  Leap: Leap
   Clear: 清除
 
   Only Show "Complete" NFTs: 只顯示"完整"的NFT

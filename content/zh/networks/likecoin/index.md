@@ -11,8 +11,6 @@ page_type: network_homepage
 
 ### 驗證人資料連結
 - [dao.like.co](https://dao.like.co/validators/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg) (此頁面可質押)
-- [Mintscan](https://www.mintscan.io/likecoin/validators/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg)
-- [BigDipper](https://bigdipper.live/likecoin/validators/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg)
 - [Ping Hub](https://ping.pub/likecoin/staking/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg) (此頁面可質押)
 
 #### Restake (自動質押獎勵複投)

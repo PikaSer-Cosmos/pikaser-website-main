@@ -45,5 +45,6 @@
   },
   "overrides": {
     "@nuxt/kit": "$@nuxt/kit"
-  }
+  },
+  "packageManager": "yarn@4.5.3"
 }

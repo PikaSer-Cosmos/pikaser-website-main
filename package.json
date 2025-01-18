@@ -5,7 +5,9 @@
     "build": "nuxt build",
     "dev": "nuxt dev --port 8000",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "clean": "nuxt cleanup",
+    "postinstall": "nuxt prepare"
   },
   "devDependencies": {
     "@keplr-wallet/types": "^0.12.69",

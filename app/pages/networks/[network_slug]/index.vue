@@ -16,7 +16,7 @@
               <article v-for="post of all_service_posts" :key="post.slug" class="page-entry-box">
                 <div class="page-entry-box__main-content">
                   <h3 class="text-lg mb-2">
-                    <nuxt-link :to="post._path">
+                    <nuxt-link :to="post.path">
                       {{ post.title }}
                     </nuxt-link>
                   </h3>
@@ -28,7 +28,7 @@
               <article v-for="post of all_tool_pages" :key="post.slug" class="page-entry-box">
                 <div class="page-entry-box__main-content">
                   <h3 class="text-lg mb-2">
-                    <nuxt-link :to="post._path">
+                    <nuxt-link :to="post.path">
                       {{ post.title }}
                     </nuxt-link>
                   </h3>
@@ -55,7 +55,7 @@
               <article v-for="post of all_proposal_posts" :key="post.slug" class="page-entry-box">
                 <div class="page-entry-box__main-content">
                   <h3 class="text-lg mb-2">
-                    <nuxt-link :to="post._path">
+                    <nuxt-link :to="post.path">
                       {{ post.title }}
                     </nuxt-link>
                   </h3>
@@ -91,16 +91,16 @@ const { data } = await useAsyncData(
     I18n.locale.value,
     route.params.network_slug,
   ].join("/"),
-  () => queryContent(
-    I18n.locale.value,
-    "networks",
-    route.params.network_slug,
-  )
-  .where({ page_type: { $contains: "network_homepage" } })
-  .findOne()
+  () => queryCollection('content')
+  .where('path', 'LIKE', `/${I18n.locale.value}/networks/${route.params.network_slug}%`)
+  .where('page_type', '=', "network_homepage")
+  .first()
 )
 
-useContentHead(data)
+useSeoMeta({
+  title: data.value?.title,
+  description: data.value?.description
+})
 
 
 const {
@@ -114,18 +114,14 @@ const {
   ].join("/"),
   () => {
     return queryNetworkProposalsContent()
-    .sort({ title: -1 })
-    .find()
+    .order('title', 'DESC')
+    .all()
   }
 )
 
 function queryNetworkProposalsContent() {
-  return queryContent(
-    I18n.locale.value,
-    "networks",
-    route.params.network_slug,
-    "proposals",
-  )
+  return queryCollection('content')
+  .where('path', 'LIKE', `/${I18n.locale.value}/networks/${route.params.network_slug}/proposals%`)
 }
 
 const {
@@ -139,17 +135,13 @@ const {
   ].join("/"),
   () => {
     return queryNetworkServicesContent()
-    .find()
+    .all()
   }
 )
 
 function queryNetworkServicesContent() {
-  return queryContent(
-    I18n.locale.value,
-    "networks",
-    route.params.network_slug,
-    "services",
-  )
+  return queryCollection('content')
+  .where('path', 'LIKE', `/${I18n.locale.value}/networks/${route.params.network_slug}/services%`)
 }
 
 const {
@@ -163,17 +155,13 @@ const {
   ].join("/"),
   () => {
     return queryNetworkToolPagesContent()
-    .find()
+    .all()
   }
 )
 
 function queryNetworkToolPagesContent() {
-  return queryContent(
-    I18n.locale.value,
-    "networks",
-    route.params.network_slug,
-    "tools",
-  )
+  return queryCollection('content')
+  .where('path', 'LIKE', `/${I18n.locale.value}/networks/${route.params.network_slug}/tools%`)
 }
 
 const all_service_n_tools_entries_loaded = computed(() => {

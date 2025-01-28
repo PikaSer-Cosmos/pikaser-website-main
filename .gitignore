@@ -320,4 +320,3 @@ tags
 .nitro
 *.log*
 .output
-.data/content

@@ -11,12 +11,7 @@
 <script setup>
 const route = useRoute()
 
-const { data } = await useAsyncData(route.path, () => {
-  return queryCollection('content').path(route.path).first()
-})
+const { data } = await useAsyncData(() => queryContent(route.path).findOne())
 
-useSeoMeta({
-  title: data.value?.title,
-  description: data.value?.description
-})
+useContentHead(data)
 </script>

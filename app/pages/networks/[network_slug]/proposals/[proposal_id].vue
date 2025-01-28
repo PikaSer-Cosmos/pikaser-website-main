@@ -29,16 +29,15 @@ const { data } = await useAsyncData(
     route.params.network_slug,
     route.params.proposal_id,
   ].join("/"),
-  () => queryContent(
-    I18n.locale.value,
-    "networks",
-    route.params.network_slug,
-    "proposals",
-    route.params.proposal_id,
-  ).findOne()
+  () => queryCollection('content')
+  .path(`/${I18n.locale.value}/networks/${route.params.network_slug}/proposals/${route.params.proposal_id}`)
+  .first()
 )
 
-useContentHead(data)
+useSeoMeta({
+  title: data.value?.title,
+  description: data.value?.description
+})
 </script>
 
 <style lang="scss">

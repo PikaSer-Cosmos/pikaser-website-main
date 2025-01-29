@@ -4,7 +4,8 @@
       "source": "/(.*)",
       "headers": [
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
-        { "key": "Cross-Origin-Embedder-Policy", "value": "require-corp" }
+        { "key": "Cross-Origin-Embedder-Policy", "value": "require-corp" },
+        { "key": "cross-origin-Resource-policy", "value": "cross-origin" }
       ]
     }
   ]

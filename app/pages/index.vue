@@ -59,12 +59,12 @@ const I18n = useI18n()
 const { t } = I18n
 
 const query_text = ref("")
-const { data: all_posts_count } = await useAsyncData(`all-posts-${I18n.locale.value}`, () => {
-  return queryNetworkHomepagesContent().count()
-})
-const { data: posts } = await useAsyncData(`all-posts-${I18n.locale.value}`, () => {
-  return queryNetworkHomepagesContent().all()
-})
+const { data: all_posts_count } = await useAsyncData(`all-posts-count-${I18n.locale.value}`, () =>
+  queryNetworkHomepagesContent().count()
+)
+const { data: posts } = await useAsyncData(`all-posts-${I18n.locale.value}`, () =>
+  queryNetworkHomepagesContent().all()
+)
 
 watch(query_text, async (newQuery) => {
   if (!newQuery) {
@@ -72,7 +72,7 @@ watch(query_text, async (newQuery) => {
     return
   }
   posts.value = await queryNetworkHomepagesContent().where(
-    'title', 'LIKE', newQuery,
+    'title', 'LIKE', `%${newQuery}%`,
   ).all()
 })
 

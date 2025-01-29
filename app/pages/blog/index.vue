@@ -49,7 +49,7 @@ watch(query, async (newQuery) => {
     return
   }
   posts.value = await queryCollection('content').path(`/${I18n.locale.value}/blog`).where(
-    'title', 'LIKE', newQuery,
+    'title', 'LIKE', `%${newQuery}%`,
   ).all()
 })
 

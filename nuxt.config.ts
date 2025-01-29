@@ -98,6 +98,10 @@ export default defineNuxtConfig({
 
   // Enable Client-side only rendering
   ssr: false,
+  // pre-render your pages at build time to improve performance and avoid CPU usage on the server
+  routeRules: {
+    '/': { prerender: true },
+  },
 
   // Enable devtool
   // Since nuxt 3.4

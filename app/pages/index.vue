@@ -21,7 +21,7 @@
             v-model="query_text"
             class="px-3 py-2 shadow border border-gray-200"
             type="text"
-            :placeholder="t('Search among N supported networks(s)', all_posts.length)"
+            :placeholder="t('Search among N supported networks(s)', all_posts_count)"
           />
         </form>
       </section>
@@ -29,7 +29,7 @@
         <article v-for="post of posts" :key="post.slug" class="pt-4 page-entry-box">
           <div class="page-entry-box__main-content">
             <h2 class="text-lg mb-2">
-              <nuxt-link :to="post._path">
+              <nuxt-link :to="post.path">
                 {{ post.title }}
               </nuxt-link>
             </h2>
@@ -54,32 +54,32 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useI18n } from '#i18n'
-import { useAsyncData, useHead } from "#imports"
 
 const I18n = useI18n()
 const { t } = I18n
 
 const query_text = ref("")
-const { data: all_posts } = await useAsyncData(`all-posts-${I18n.locale.value}`, () => {
-  return queryNetworkHomepagesContent().find()
-})
-const { data: posts } = await useAsyncData(`all-posts-${I18n.locale.value}`, () => {
-  return queryNetworkHomepagesContent().find()
-})
+const { data: all_posts_count } = await useAsyncData(`all-posts-count-${I18n.locale.value}`, () =>
+  queryNetworkHomepagesContent().count()
+)
+const { data: posts } = await useAsyncData(`all-posts-${I18n.locale.value}`, () =>
+  queryNetworkHomepagesContent().all()
+)
 
 watch(query_text, async (newQuery) => {
   if (!newQuery) {
-    posts.value = await queryNetworkHomepagesContent().find()
+    posts.value = await queryNetworkHomepagesContent().all()
     return
   }
-  posts.value = await queryNetworkHomepagesContent().where({
-    "title": { $contains: newQuery },
-  }).find()
+  posts.value = await queryNetworkHomepagesContent().where(
+    'title', 'LIKE', `%${newQuery}%`,
+  ).all()
 })
 
 function queryNetworkHomepagesContent() {
-  return queryContent(I18n.locale.value, "networks")
-  .where({ page_type: { $contains: "network_homepage" } })
+  return queryCollection('content')
+  .where('path', 'LIKE', `/${I18n.locale.value}/networks%`)
+  .where('page_type', '=', "network_homepage")
 }
 
 

@@ -18,7 +18,7 @@
       <section class="space-y-4 divide-y">
         <article v-for="post of posts" :key="post.slug" class="pt-4">
           <h2 class="text-lg mb-2 text-blue-700 hover:text-blue-800">
-            <nuxt-link :to="post._path">
+            <nuxt-link :to="post.path">
               {{ post.title }}
             </nuxt-link>
           </h2>
@@ -40,17 +40,17 @@ const I18n = useI18n()
 
 const query = ref("")
 const { data: posts } = await useAsyncData(`all-posts-${I18n.locale.value}`, () => {
-  return queryContent(I18n.locale.value, "blog").find()
+  return queryCollection('content').path(`/${I18n.locale.value}/blog`).all()
 })
 
 watch(query, async (newQuery) => {
   if (!newQuery) {
-    posts.value = await queryContent(I18n.locale.value, "blog").find()
+    posts.value = await queryCollection('content').path(`/${I18n.locale.value}/blog`).all()
     return
   }
-  posts.value = await queryContent(I18n.locale.value, "blog").where({
-    "title": { $contains: newQuery },
-  }).find()
+  posts.value = await queryCollection('content').path(`/${I18n.locale.value}/blog`).where(
+    'title', 'LIKE', `%${newQuery}%`,
+  ).all()
 })
 
 </script>

@@ -30,13 +30,14 @@ const { data } = await useAsyncData(
   [
     route.path,
   ].join("/"),
-  () => queryContent(
-    route.path,
-  )
-  .findOne()
+  () => queryCollection('content').path(route.path)
+  .first()
 )
 
-useContentHead(data)
+useSeoMeta({
+  title: data.value?.title,
+  description: data.value?.description
+})
 
 </script>
 

@@ -1386,9 +1386,9 @@
     vue-router "^4.4.4"
 
 "@nuxtjs/mdc@^0.13.2":
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/@nuxtjs/mdc/-/mdc-0.13.2.tgz#2d8662d191f5134cfe8d424645da3678c381f30d"
-  integrity sha512-svDuGa8CihsroTib4GcmkpcYJfxu2vZc/ohSKf4r+qMP7h4OR56xhK6P8N8pCuTWxDgN4JxgiK98R82upnBihg==
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/mdc/-/mdc-0.13.3.tgz#36a3a2ee258092b963bc4dd32664749edc89dcc6"
+  integrity sha512-re0DPjSHREB4F/h3CCKKeJ8t4ABlcJMPNIPlHMpkqCq4jBNifNtLptdy7PpxX8l0QnKv1t+oEvHv1gD+RRiSjA==
   dependencies:
     "@nuxt/kit" "^3.15.2"
     "@shikijs/transformers" "^1.27.2"

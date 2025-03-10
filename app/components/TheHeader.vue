@@ -4,7 +4,7 @@
       <ul class="nav-item-list nav-item-list-left">
         <li>
           <nuxt-link
-            :to="localePath('/')"
+            :to="$localePath('/')"
             class="logo-link"
           >
             <nuxt-img
@@ -19,21 +19,21 @@
         </li>
         <li>
           <nuxt-link
-            :to="localePath('/')"
+            :to="$localePath('/')"
           >
             {{ t("Home") }}
           </nuxt-link>
         </li>
         <li>
           <nuxt-link
-            :to="localePath('/about')"
+            :to="$localePath('/about')"
           >
             {{ t("About") }}
           </nuxt-link>
         </li>
         <li v-if="false">
           <nuxt-link
-            :to="localePath('blog')"
+            :to="$localePath('blog')"
           >
             {{ t("Blog") }}
           </nuxt-link>
@@ -41,11 +41,11 @@
       </ul>
       <ul class="nav-item-list nav-item-list-right">
         <li
-          v-for="locale in $i18n.locales"
+          v-for="locale in locales"
           :key="locale.code"
         >
           <nuxt-link
-            :to="localeLocation('/', locale.code)"
+            :to="$localeLocation('/', locale.code)"
           >
             {{ locale.name }}
           </nuxt-link>
@@ -58,7 +58,7 @@
 <script setup>
 import { useI18n } from "#i18n"
 
-const { t } = useI18n()
+const { t, locales } = useI18n()
 </script>
 
 <style scoped lang="scss">

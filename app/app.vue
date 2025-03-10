@@ -31,7 +31,7 @@ useHead({
     { name: 'description', content: t("meta.description") }
   ],
   htmlAttrs: {
-    lang: currentLocale.value.iso,
+    lang: currentLocale.value.language,
   },
 })
 
@@ -40,7 +40,7 @@ watch(
   () => {
     useHead({
       htmlAttrs: {
-        lang: currentLocale.value.iso,
+        lang: currentLocale.value.language,
       },
     })
   },

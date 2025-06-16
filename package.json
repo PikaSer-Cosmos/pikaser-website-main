@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@keplr-wallet/types": "^0.12.69",
-    "@nuxt/content": "^3.5.1",
+    "@nuxt/content": "^3.6.0",
     "@nuxt/devtools": "^1.0.8",
     "@nuxt/devtools-ui-kit": "^1.0.8",
     "@nuxt/image": "^1.10.0",
@@ -31,6 +31,7 @@
     "@nuxtjs/i18n": "^9.3.1",
     "@pinia/nuxt": "^0.5.1",
     "@vueuse/core": "^10.7.2",
+    "better-sqlite3": "^11.10.0",
     "dayjs": "^1.11.10",
     "lodash.once": "^4.1.1",
     "pg": "^8.13.1",

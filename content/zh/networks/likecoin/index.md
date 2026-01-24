@@ -1,5 +1,5 @@
 ---
-title: 'LikeCoin 網絡'
+title: 'LikeCoin 網絡 (V2) (驗證人服務已停止)'
 description: LikeCoin 網絡資訊，包括PikaSer驗證人資料
 list_item_image_path: /likecoin/LikeCoin_PressKit_Logo_Fullcolor_Light.svg
 page_type: network_homepage
@@ -7,14 +7,10 @@ page_type: network_homepage
 
 <ContentImg src="/likecoin/1696.png" width=1500 height=500 placeholder="300,100"></ContentImg>
 
-## 驗證人資料
+## 驗證人資料 (驗證人服務已停止)
 
 ### 驗證人資料連結
-- [dao.like.co](https://dao.like.co/validators/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg) (此頁面可質押)
-- [Ping Hub](https://ping.pub/likecoin/staking/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg) (此頁面可質押)
-
-#### Restake (自動質押獎勵複投)
-https://restake.app/likecoin/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg
+- [Ping Hub](https://ping.pub/likecoin/staking/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg)
 
 ### 名稱
 `PikaSer`
@@ -22,7 +18,7 @@ https://restake.app/likecoin/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg
 我有個[Minecraft](https://www.minecraft.net)伺服器叫`Pika Server`(我就懶改名)，簡稱`PikaSer`
 
 ### 網站
-https://liker.social/@PikachuEXE
+https://vault76.pikaser.net/@PikachuEXE
 
 其實應該指向這個網站，但是當上驗證人時還沒建好
 

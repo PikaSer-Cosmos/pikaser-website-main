@@ -1,5 +1,5 @@
 ---
-title: 'LikeCoin Network'
+title: 'LikeCoin Network (V2) (Validator Service Discontinued)'
 description: Details of LikeCoin network including the validator PikaSer
 list_item_image_path: /likecoin/LikeCoin_PressKit_Logo_Fullcolor_Light.svg
 page_type: network_homepage
@@ -7,14 +7,10 @@ page_type: network_homepage
 
 <ContentImg src="/likecoin/1696.png" width=1500 height=500 placeholder="300,100"></ContentImg>
 
-## Validator Details
+## Validator Details (Validator Service Discontinued)
 
 ### Validator Details on External Websites
-- [dao.like.co](https://dao.like.co/validators/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg) (Staking Available on Page)
-- [Ping Hub](https://ping.pub/likecoin/staking/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg) (Staking Available on Page)
-
-#### Restake (Auto Staking Reward Compounding)
-https://restake.app/likecoin/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg
+- [Ping Hub](https://ping.pub/likecoin/staking/likevaloper1ve7k6rhu8qyaqavmr8mqlcepcrh2qq33tqydvg)
 
 ### Name / Moniker
 `PikaSer`
@@ -23,7 +19,7 @@ I have a [Minecraft](https://www.minecraft.net) server named `Pika Server`(Lazy 
 So in short it's called `PikaSer`
 
 ### Website
-https://liker.social/@PikachuEXE
+https://vault76.pikaser.net/@PikachuEXE
 
 This should actually point to this website. But this website was not even started to be built when the validator service was started.
 
